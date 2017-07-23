@@ -1,0 +1,15 @@
+v1.01 changelog
+	Fuel blend
+		Fixed Lava being accepted when the fuel blend is active
+		Synced JEI and creative tab with the enabler
+		Added a JEI information tab
+
+v1.02 changelog
+	[Request] Added a Fuel Blend option inspired by ATM:Expert, configurable from the config. Applies to all modules
+	Generic maintenance
+
+v1.01 changelog
+	Minor tweaks
+
+v1.00 changelog
+	initial commit

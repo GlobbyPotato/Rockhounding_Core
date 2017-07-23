@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rockhounding_core",
+  "name": "Rockhounding Mod: Core",
+  "description": "This mod contains the common class for all the Rockhounding modules.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["GlobbyPotato"],
+  "credits": "The Forge and FML guys.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
