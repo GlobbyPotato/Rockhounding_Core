@@ -1,4 +1,4 @@
-v1.01 changelog
+v1.03 changelog
 	Fuel blend
 		Fixed Lava being accepted when the fuel blend is active
 		Synced JEI and creative tab with the enabler
