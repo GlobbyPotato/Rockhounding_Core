@@ -14,11 +14,11 @@ public class MachineStackHandler extends ItemStackHandler{
 	}
 
 	public boolean canSetOrStack(ItemStack stackInSlot, ItemStack recipeOutput) {
-		return (stackInSlot == null || (stackInSlot != null && stackInSlot.isItemEqual(recipeOutput) && stackInSlot.stackSize <= stackInSlot.getMaxStackSize() - recipeOutput.stackSize));
+		return stackInSlot == null || canStack(stackInSlot, recipeOutput);
 	}
 
 	public boolean canStack(ItemStack stackInSlot, ItemStack recipeOutput) {
-		return (stackInSlot != null && stackInSlot.isItemEqual(recipeOutput) && stackInSlot.stackSize <= stackInSlot.getMaxStackSize() - recipeOutput.stackSize);
+		return stackInSlot != null && stackInSlot.isItemEqual(recipeOutput) && stackInSlot.stackSize <= stackInSlot.getMaxStackSize() - recipeOutput.stackSize;
 	}
 
 	public void setOrStack(int slot, ItemStack stackToSet){
@@ -31,6 +31,10 @@ public class MachineStackHandler extends ItemStackHandler{
 		}
 	}
 
+	public boolean canIncrementSlot(ItemStack stack) {
+		return stack != null && stack.stackSize < stack.getMaxStackSize();
+	}
+
 	public void incrementSlot(int slot){
 		ItemStack temp = this.getStackInSlot(slot);
 		if(temp.stackSize + 1 <= temp.getMaxStackSize()){
@@ -38,7 +42,7 @@ public class MachineStackHandler extends ItemStackHandler{
 		}
 		this.setStackInSlot(slot, temp);
 	}
-	
+
 	public void setOrIncrement(int slot, ItemStack stackToSet){
 		if(this.getStackInSlot(slot) == null){
 			this.setStackInSlot(slot, stackToSet);
@@ -69,10 +73,13 @@ public class MachineStackHandler extends ItemStackHandler{
 			}
 		}
 	}
-	
+
 	public boolean canSetOrFill(FluidTank tank, FluidStack tankFluid, FluidStack recipeFluid) {
-		return recipeFluid != null
-			&& tankFluid == null || (tankFluid != null && tankFluid.isFluidEqual(recipeFluid) && tankFluid.amount <= tank.getCapacity() - recipeFluid.amount);
+		return recipeFluid != null && (tankFluid == null || canFillTank(tank, tankFluid, recipeFluid));
+	}
+
+	public boolean canFillTank(FluidTank tank, FluidStack tankFluid, FluidStack recipeFluid){
+		return tankFluid != null && tankFluid.isFluidEqual(recipeFluid) && tankFluid.amount <= tank.getCapacity() - recipeFluid.amount;
 	}
 
 	public boolean hasEnoughFluid(FluidStack tankFluid, FluidStack recipeFluid){
@@ -80,7 +87,7 @@ public class MachineStackHandler extends ItemStackHandler{
 			&& tankFluid.isFluidEqual(recipeFluid) 
 			&& tankFluid.amount >= recipeFluid.amount;
 	}
-	
+
 	public void drainOrClean(FluidTank tank, int amount, boolean doClean){
 		tank.getFluid().amount -= amount;
 		if (doClean && tank.getFluidAmount() <= 0) {

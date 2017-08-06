@@ -61,13 +61,17 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		return ModConfig.allowInductor && permanentInductor; 
 	}
 
+	public boolean hasFuelBlend() { 
+		return ModConfig.enableFuelBlend; 
+	}
+
 	protected void fuelHandler(ItemStack stack) {
 		if(stack != null) {
-			if(!ModConfig.enableFuelBlend && FuelUtils.isItemFuel(stack) ){
+			if(!hasFuelBlend() && FuelUtils.isItemFuel(stack) ){
 				if( powerCount <= (powerMax - FuelUtils.getItemBurnTime(stack)) ){
 					burnFuel(stack);
 				}
-			}else if(ModConfig.enableFuelBlend && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.fuel_blend))){
+			}else if(hasFuelBlend() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.fuel_blend))){
 				if( powerCount <= (powerMax - ModConfig.fuelBlendPower) ){
 					burnBlend(stack);
 				}
@@ -95,7 +99,8 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	}
 
 	protected boolean hasRedstone(ItemStack insertingStack) {
-		return insertingStack != null 
+		return !hasFuelBlend()
+			&& insertingStack != null 
 			&& (insertingStack.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK) || insertingStack.getItem() == Items.REDSTONE);
 	}
 
@@ -117,6 +122,16 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 			input.setStackInSlot(slot, null);
 		}
 	}
+
+	public boolean isRedstoneRequired(int amount){
+		return hasFuelBlend() ? true : this.getRedstone() >= amount;
+	}
+
+	public boolean needsRedstoneRefill(){
+		return hasFuelBlend() ? true : isFullRedstone();
+	}
+
+
 
 	//---------------- I/O ----------------
 	@Override
@@ -154,8 +169,6 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		return super.getCapability(capability, facing);
 	}
 
-
-
 	//---------------- COFH ----------------
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
@@ -170,13 +183,13 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 
 	public int calculateEnergy(int maxReceive, boolean simulate){
 		int energyReceived = 0;
-		if((canInduct() && hasRF() && isFullRedstone()) || (canInduct() && !hasRF()) ){
+		if(isRedstoneFilled() || canRefillOnlyPower() ){
 	        energyReceived = Math.min(this.getPowerMax() - this.getPower(), Math.min(maxReceive, maxReceive));
 	        if (!simulate){
 	        	this.powerCount += energyReceived;
 	        }
 			if(isFullPower()){this.powerCount = this.powerMax;}
-		}else if(hasRF()){
+		}else if(redstoneIsRefillable()){
 	        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), Math.min(maxReceive, maxReceive));
 	        if (!simulate){
 	        	this.redstoneCount += energyReceived;
@@ -184,6 +197,18 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 			if(isFullRedstone()){this.redstoneCount = this.redstoneMax;}
 		}
         return maxReceive > 0 ? energyReceived : 0;
+	}
+
+	public boolean redstoneIsRefillable() {
+		return hasRF() && !hasFuelBlend();
+	}
+
+	public boolean canRefillOnlyPower() {
+		return canInduct() && !hasRF();
+	}
+
+	public boolean isRedstoneFilled() {
+		return canInduct() && hasRF() && needsRedstoneRefill();
 	}
 
 
