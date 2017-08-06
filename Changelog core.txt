@@ -1,3 +1,7 @@
+v1.04 changelog
+	If the Fuel Blend is enabled, Lab Oven and Chemical Extractor no longer need a secondary redstone supply
+		Various tweaks
+
 v1.03 changelog
 	Fuel blend
 		Fixed Lava being accepted when the fuel blend is active
