@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class IReciper {
 
@@ -16,7 +17,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Mineral Analyzer.
+	 * Adds a custom recipe to the Mineral Analyzer.
 	 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
 	 * 
 	 * @param inputStack : the input itemstack
@@ -41,7 +42,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Adds a custom recipe to the Mineral Analyzer.
+	 * Adds a custom recipe to the Mineral Analyzer.
 	 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
 	 * 
 	 * @param inputStack : the input itemstack
@@ -75,7 +76,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a recipe from the Mineral Analyzer.
+	 * Removes a recipe from the Mineral Analyzer.
 	 * 
 	 * @param inputStack : the itemstack no longer allowed to be processed
 	 */
@@ -95,7 +96,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Chemical Extractor.
+	 * Adds a custom recipe to the Chemical Extractor.
 	 * The input includes an array with the elements composing the itemstack and an array with the percentage of each element
 	 * 
 	 * @param category : the category to which the input itemstack belongs
@@ -133,7 +134,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Inhibits one or more elements from the Chemical Extractor.
+	 * Inhibits one or more elements from the Chemical Extractor.
 	 * 
 	 * @param elements : the list of elements inhibited from extraction
 	 */
@@ -159,7 +160,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom fluid recipe to the Lab Oven.
+	 * Adds a custom fluid recipe to the Lab Oven.
 	 * 
 	 * @param soluteStack : the input itemstack representing the solid ingredient 
 	 * @param isCatalyst : if the solute will be treated as a catalyst
@@ -188,7 +189,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Adds a custom fluid recipe to the Lab Oven.
+	 * Adds a custom fluid recipe to the Lab Oven.
 	 * 
 	 * @param soluteStack : the input itemstack representing the solid ingredient 
 	 * @param isCatalyst : if the solute will be treated as a catalyst
@@ -211,7 +212,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a fluid recipe from the Lab Oven.
+	 * Removes a fluid recipe from the Lab Oven.
 	 * 
 	 * @param outputFluid : the output fluid to remove. Amount will be ignored
 	 */
@@ -231,7 +232,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Mineral Sizer.
+	 * Adds a custom recipe to the Mineral Sizer.
 	 * 
 	 * @param inputStack : the input itemstack
 	 * @param outputStack : the output itemstack
@@ -255,7 +256,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Adds a custom recipe to the Mineral Sizer.
+	 * Adds a custom recipe to the Mineral Sizer.
 	 * 
 	 * @param inputStack : the input itemstack
 	 * @param elements : the list of elements extractible from the the input itemstack
@@ -288,7 +289,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a recipe from the Mineral Sizer.
+	 * Removes a recipe from the Mineral Sizer.
 	 * 
 	 * @param inputStack : the object being crushed
 	 */
@@ -308,7 +309,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Seasoning Rack.
+	 * Adds a custom recipe to the Seasoning Rack.
 	 * 
 	 * @param inputStack : the itemstack being processed
 	 * @param outputStack : the resulting itemstack
@@ -325,7 +326,7 @@ public class IReciper {
 	}
 
 	/**
-	 * Description: Remove an itemstack the list of allowed currency
+	 * Remove an itemstack the list of allowed currency
 	 * 
 	 * @param inputStack : the itemstack being processed
 	 */
@@ -344,7 +345,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Metal Alloyer.
+	 * Adds a custom recipe to the Metal Alloyer.
 	 * The input is an array of 1 to 6 strings representing the oredict of the single dust and their quantity in the alloy.
 	 * The order is fixed, so an alloy can have the same ingredients. Just one difference in the arrays will make it unique.
 	 * 
@@ -389,7 +390,7 @@ public class IReciper {
 	}
 	
 	/**
-	 * description: Adds a custom recipe to the Metal Alloyer.
+	 * Adds a custom recipe to the Metal Alloyer.
 	 * The input is an array of 1 to 6 strings representing the oredict of the single dust and their quantity in the alloy.
 	 * The order is fixed, so an alloy can have the same ingredients. Just one difference in the arrays will make it unique.
 	 * 
@@ -429,7 +430,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a recipe from the Metal Alloyer.
+	 * Removes a recipe from the Metal Alloyer.
 	 * 
 	 * @param ingotStack : the outputted alloy result.
 	 */
@@ -448,7 +449,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Deposition Chamber.
+	 * Adds a custom recipe to the Deposition Chamber.
 	 * Max fluid amount can be 10000mB. Temperature can be any integer up to 3000, pressure can be any integer up to 32000.
 	 * 
 	 * @param inputStack : the input itemstack
@@ -476,7 +477,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a recipe from the Deposition Chamber.
+	 * Removes a recipe from the Deposition Chamber.
 	 * 
 	 * @param outputStack : the outputted result.
 	 */
@@ -489,13 +490,125 @@ public class IReciper {
 	}
 
 
+	
+/**
+ * ROCKHOUNDING: CHEMISTRY   -   CASTING BENCH
+ * The Casting bench produces several metal furnitures for the mod
+ */
+
+	/**
+	 * Adds a custom recipe to the Casting bench.
+	 * Left-click to scroll the available patterns, right-click to add/remove the recipe items 
+	 * 
+	 * @param input : the OreDictionary String related to the input material
+	 * @param outputStack : the output itemstack
+	 * @param pattern : the numeric code of the required pattern. 0-Coils, 1-Rods, 2-Foils, 3-Arm, 4-Casing, 5-Customized
+	 */
+	protected static void sendToCasting(String input, ItemStack outputStack, int pattern) {
+		NBTTagCompound output = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		recipe.setString("Input", input);
+		outputStack.writeToNBT(output);
+		recipe.setTag("Output", output);
+		recipe.setInteger("Pattern", pattern);
+		FMLInterModComms.sendMessage("rockhounding_chemistry", "addToCasting", recipe);
+	}
+
+	/**
+	 * Removes a recipe from the Casting bench.
+	 * 
+	 * @param outputStack : the output itemstack
+	 */
+	protected static void removeFromCasting(ItemStack outputStack) {
+		NBTTagCompound output = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		outputStack.writeToNBT(output);
+		recipe.setTag("Output", output);
+		FMLInterModComms.sendMessage("rockhounding_chemistry", "removeFromCasting", recipe);
+	}
+
+	
+	
+/**
+ * ROCKHOUNDING: CHEMISTRY   -   LAB BLENDER
+ * The Lab Blender refines solid composts used by the mod
+ */
+
+	/**
+	 * Adds a custom recipe to the Lab Blender via oredict.
+	 * 
+	 * @param oredict : the list of oredicted ingredients
+	 * @param quantity : the amount of each ingredient required
+	 * @param outputStack : the output itemstack. The stacksize is considered too
+	 */
+	protected static void sendToBlender(List<String> oredict, List<Integer> quantity, ItemStack outputStack) {
+		NBTTagCompound output = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		NBTTagList elementList = new NBTTagList();
+		int ingrNum = 0;
+		for(int i = 0; i < oredict.size(); i++){
+			String ingr = oredict.get(i);
+			List<ItemStack> ores = OreDictionary.getOres(ingr);
+			if(ores.size() > 0){
+				ItemStack entryStack = ores.get(0);
+				entryStack.stackSize = quantity.get(i);
+				NBTTagCompound tagElements = new NBTTagCompound();
+				entryStack.writeToNBT(tagElements);
+				elementList.appendTag(tagElements);
+				ingrNum++;
+			}
+		}
+		recipe.setTag("Elements", elementList);
+		outputStack.writeToNBT(output);
+		recipe.setTag("Output", output);
+		if(ingrNum == oredict.size()){
+			FMLInterModComms.sendMessage("rockhounding_chemistry", "addToBlender", recipe);
+		}
+	}
+
+	/**
+	 * Adds a custom recipe to the Lab Blender via itemstack.
+	 * 
+	 * @param inputStack : the list of ingredient itemstacks
+	 * @param outputStack : the output itemstack. The stacksize is considered too
+	 */
+	protected static void sendToBlender(List<ItemStack> inputStack, ItemStack outputStack) {
+		NBTTagCompound output = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		NBTTagList elementList = new NBTTagList();
+		for(int i = 0; i < inputStack.size(); i++){
+            NBTTagCompound tagElements = new NBTTagCompound();
+            inputStack.get(i).writeToNBT(tagElements);
+            elementList.appendTag(tagElements);
+		}
+		recipe.setTag("Elements", elementList);
+		outputStack.writeToNBT(output);
+		recipe.setTag("Output", output);
+		FMLInterModComms.sendMessage("rockhounding_chemistry", "addToBlender", recipe);
+	}
+
+	/**
+	 * Removes a recipe from the Lab Blender.
+	 * 
+	 * @param outputStack : the output itemstack
+	 */
+	protected static void removeFromBlender(ItemStack outputStack) {
+		NBTTagCompound output = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		outputStack.writeToNBT(output);
+		recipe.setTag("Output", output);
+		FMLInterModComms.sendMessage("rockhounding_chemistry", "removeFromBlender", recipe);
+	}
+
+	
+	
 /**
  * ROCKHOUNDING: SURFACE   -   WOOD INCUBATOR
  * The Wood Incubator transforms an object into another by the effect of a solid and a fluid ingredient.
  */
 
 	/**
-	 * description: Adds a custom recipe to the Wood Incubator.
+	 * Adds a custom recipe to the Wood Incubator.
 	 * 
 	 * @param inputStack : the object to be transformed
 	 * @param soluteStack : the solid ingredient
@@ -522,7 +635,7 @@ public class IReciper {
 	}
 
 	/**
-	 * description: Removes a recipe from the Wood Incubator.
+	 * Removes a recipe from the Wood Incubator.
 	 * 
 	 * @param outputStack : the final object
 	 */
@@ -541,7 +654,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Compost Bin
+	 * Adds a custom recipe to the Compost Bin
 	 * 
 	 * @param inputStack : the object being composted
 	 * @param canInputOredict : if the input can include oredicted equivalents
@@ -576,7 +689,7 @@ public class IReciper {
  */
 
 	/**
-	 * description: Adds a custom recipe to the Bloomery.
+	 * Adds a custom recipe to the Bloomery.
 	 * 
 	 * @param inputStack : ore to be smelted
 	 * @param moltenStack : the fluid obtained melting the ore
@@ -597,7 +710,7 @@ public class IReciper {
 	}
 
 	/**
-	 * Description: Remove a recipe from the Bloomery casted items
+	 * Remove a recipe from the Bloomery casted items
 	 * 
 	 * @param inputStack : ore to be smelted
 	 */
@@ -615,7 +728,7 @@ public class IReciper {
  * The Basic coal refinery allows to improve coals used by the mod into better coals.
  */
 	/**
-	 * description: Adds a custom recipe to the Seasoning Rack.
+	 * Adds a custom recipe to the Seasoning Rack.
 	 * 
 		 * @param inputStack : coal to be improved
 		 * @param outputStack : improved coal
@@ -632,7 +745,7 @@ public class IReciper {
 	}
 
 	/**
-	 * Description: Removes a recipe from the refiner
+	 * Removes a recipe from the refiner
 	 * 
 		 * @param inputStack : coal to be improved
 	 */
@@ -650,7 +763,7 @@ public class IReciper {
  * The Peat drying pallet allows to dry moist peat chunks into the proper coal.
  */
 	/**
-	 * description: Adds a custom recipe to the pallet.
+	 * Adds a custom recipe to the pallet.
 	 * 
 		 * @param inputStack : item to be improved
 		 * @param outputStack : improved item
@@ -667,7 +780,7 @@ public class IReciper {
 	}
 
 	/**
-	 * Description: Removes a recipe from the pallet
+	 * Removes a recipe from the pallet
 	 * 
 		 * @param inputStack : item to be improved
 	 */
@@ -686,7 +799,7 @@ public class IReciper {
  */
 
 	/**
-	 * Description: Add a custom fee item to the Rocks Vending System
+	 * Add a custom fee item to the Rocks Vending System
 	 * 
 	 * @param inputStack : the itemstack allowed to be used as currency
 	 * @param canInputOredict : if the iput can include oredicted equivalents
@@ -703,7 +816,7 @@ public class IReciper {
 	}
 
 	/**
-	 * Description: Remove an itemstack the list of allowed currency
+	 * Remove an itemstack the list of allowed currency
 	 * 
 	 * @param inputStack : the itemstack to remove from the list of allowed currency
 	 */
@@ -722,7 +835,7 @@ public class IReciper {
  */
 
 	/**
-	 * Description: Add a custom recipe to the Cutting Station
+	 * Add a custom recipe to the Cutting Station
 	 * 
 	 * @param inputStack : the block that will be cut
 	 * @param cutCode : The code of the cut being performed (see gui switches). Zero if no code matches
