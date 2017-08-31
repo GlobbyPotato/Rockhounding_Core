@@ -24,7 +24,7 @@ public class BaseArray extends BaseItem {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems) {
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems){
 		for(int i = 0; i < itemArray.length; i++){subItems.add(new ItemStack(itemIn, 1, i));}
 	}
 

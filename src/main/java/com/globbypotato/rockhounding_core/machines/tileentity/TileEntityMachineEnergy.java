@@ -6,11 +6,14 @@ import com.globbypotato.rockhounding_core.CoreItems;
 import com.globbypotato.rockhounding_core.handlers.ModConfig;
 import com.globbypotato.rockhounding_core.utils.FuelUtils;
 
+import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -33,6 +36,8 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	public int yeldMax = 9000;
 	public int chargeCount = 0;
 	public int chargeMax = 1000000;
+
+    public final EnergyStorage storage = new EnergyStorage(rfTransfer());
 
 	public boolean permanentInductor;
 
@@ -72,33 +77,37 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	protected void fuelHandler(ItemStack stack) {
 		if(stack != null) {
 			if(!hasFuelBlend() && FuelUtils.isItemFuel(stack) ){
-				if( this.getPower() <= (this.getPowerMax() - FuelUtils.getItemBurnTime(stack)) ){
-					burnFuel(stack);
-				}
+				burnFuel(stack);
 			}else if(hasFuelBlend() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.fuel_blend))){
-				if( this.getPower() <= (this.getPowerMax() - ModConfig.fuelBlendPower) ){
-					burnBlend(stack);
-				}
+				burnBlend(stack);
 			}else if(ModConfig.allowInductor && !permanentInductor && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.heat_inductor))){
-					permanentInductor = true;
-					input.setStackInSlot(FUEL_SLOT, null);
+				permanentInductor = true;
+				input.setStackInSlot(FUEL_SLOT, null);
 			}
 		}
 	}
 
 	protected void burnFuel(ItemStack stack) {
-		powerCount += FuelUtils.getItemBurnTime(stack);
-		stack.stackSize--;
-		if(stack.stackSize <= 0){
-			input.setStackInSlot(FUEL_SLOT, stack.getItem().getContainerItem(input.getStackInSlot(FUEL_SLOT)));
+		if(stack != null) {
+			if( this.getPower() <= (this.getPowerMax() - FuelUtils.getItemBurnTime(stack)) ){
+				powerCount += FuelUtils.getItemBurnTime(stack);
+				stack.stackSize--;
+				if(stack.stackSize <= 0){
+					input.setStackInSlot(FUEL_SLOT, stack.getItem().getContainerItem(input.getStackInSlot(FUEL_SLOT)));
+				}
+			}
 		}
 	}
 
 	protected void burnBlend(ItemStack stack) {
-		powerCount += ModConfig.fuelBlendPower;
-		stack.stackSize--;
-		if(stack.stackSize <= 0){
-			input.setStackInSlot(FUEL_SLOT, null);
+		if(stack != null) {
+			if( this.getPower() <= (this.getPowerMax() - ModConfig.fuelBlendPower) ){
+				powerCount += ModConfig.fuelBlendPower;
+				stack.stackSize--;
+				if(stack.stackSize <= 0){
+					input.setStackInSlot(FUEL_SLOT, null);
+				}
+			}
 		}
 	}
 
@@ -157,6 +166,8 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		this.redstoneCount = compound.getInteger("RedstoneCount");
 		this.cookTime = compound.getInteger("CookTime");
 		this.permanentInductor = compound.getBoolean("Inductor");
+		this.storage.readFromNBT(compound.getCompoundTag("StorageNBT"));
+
 	}
 
 	@Override
@@ -166,6 +177,11 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		compound.setInteger("RedstoneCount", this.redstoneCount);
 		compound.setInteger("CookTime", this.cookTime);
 		compound.setBoolean("Inductor", this.permanentInductor);
+		
+		NBTTagCompound stotageNBT = new NBTTagCompound();
+		this.storage.writeToNBT(stotageNBT);
+		compound.setTag("StorageNBT", stotageNBT);
+
 		return compound;
 	}
 
@@ -190,31 +206,13 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	//---------------- COFH ----------------
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return calculateEnergy(maxReceive, false);
+		return this.storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	//---------------- FORGE ----------------
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return calculateEnergy(maxReceive, false);
-	}
-
-	public int calculateEnergy(int maxReceive, boolean simulate){
-		int energyReceived = 0;
-		if(isRedstoneFilled() || canRefillOnlyPower() ){
-	        energyReceived = Math.min(this.getPowerMax() - this.getPower(), maxReceive);
-	        if (!simulate){
-	        	this.powerCount += energyReceived;
-	        }
-			if(isFullPower()){this.powerCount = this.getPowerMax();}
-		}else if(redstoneIsRefillable()){
-	        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), maxReceive);
-	        if (!simulate){
-	        	this.redstoneCount += energyReceived;
-	        }
-			if(isFullRedstone()){this.redstoneCount = this.getRedstoneMax();}
-		}
-        return energyReceived > 0 ? energyReceived : 0;
+		return this.storage.receiveEnergy(maxReceive, simulate);
 	}
 
 
@@ -235,11 +233,54 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	@Override
 	public int getYeldMax() {     return this.yeldMax; }
 
-
-
-	//---------------- MISC ----------------
 	public int rfTransfer(){
     	return 200;
     }
+
+
+
+	//---------------- PROCESS ----------------
+	public void acceptEnergy() {
+		int energyReceived = 0;
+		if(isRedstoneFilled() || canRefillOnlyPower() ){
+	        if(!isFullPower()){
+		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), storage.getEnergyStored());
+		        this.powerCount += energyReceived;
+	        	storage.extractEnergy(energyReceived, false);
+	        }else{
+				this.powerCount = this.getPowerMax();
+			}
+		}else if(redstoneIsRefillable()){
+			if(!isFullRedstone()){
+		        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), storage.getEnergyStored());
+	        	this.redstoneCount += energyReceived;
+	        	storage.extractEnergy(energyReceived, false);
+			}else{
+				this.redstoneCount = this.getRedstoneMax();
+			}
+		}
+	}
+
+	public void sendEnergy(TileEntity checkTile, EnumFacing facing){
+		int possibleEnergy = 0;
+		if(checkTile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite()) && checkTile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite()).canReceive()){
+			possibleEnergy = checkTile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite()).receiveEnergy(rfTransfer(), true);
+			if(possibleEnergy > 0){
+				checkTile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite()).receiveEnergy(possibleEnergy, false);
+				this.redstoneCount -= possibleEnergy;
+			}
+		}else{
+			if(checkTile instanceof IEnergyReceiver) {
+				IEnergyReceiver te = (IEnergyReceiver) checkTile;
+				if(te.canConnectEnergy(facing)){
+					possibleEnergy = te.receiveEnergy(facing.getOpposite(), rfTransfer(), true);
+					if(possibleEnergy > 0){
+						te.receiveEnergy(facing.getOpposite(), possibleEnergy, false);
+						this.redstoneCount -= possibleEnergy;
+					}
+				}
+			}
+		}
+	}
 
 }

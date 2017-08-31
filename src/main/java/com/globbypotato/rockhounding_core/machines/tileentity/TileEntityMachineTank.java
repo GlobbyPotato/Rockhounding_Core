@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +21,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
 
@@ -64,8 +66,7 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 
 	//---------------- HANDLER ----------------
 	@Override
-	public boolean interactWithBucket(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean interactWithBucket(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		boolean didFill = FluidUtil.interactWithFluidHandler(heldItem, this.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side), player);
 		this.markDirtyClient();
 		return didFill;
@@ -92,8 +93,29 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 
 	//---------------- CUSTOM ----------------
 	protected boolean handleBucket(ItemStack insertingStack, Fluid fluid){
-		return CoreUtils.isBucketType(insertingStack) 
-			&& FluidUtil.getFluidContained(insertingStack).containsFluid(new FluidStack(fluid, Fluid.BUCKET_VOLUME));
+		if(insertingStack != null){
+			if(CoreUtils.isBucketType(insertingStack)){
+				if(insertingStack.getItem() instanceof UniversalBucket){
+					if(toFluidStack(fluid) != null){
+						return isValidFluidStack(insertingStack, toFluidStack(fluid));
+					}
+				}else if(insertingStack.getItem() instanceof ItemBucket || insertingStack.getItem() == Items.BUCKET){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean isValidFluidStack(ItemStack insertingStack, FluidStack fluidStack) {
+		if(insertingStack != null && fluidStack != null){
+			return FluidUtil.getFluidContained(insertingStack).containsFluid(fluidStack);
+		}
+		return false;
+	}
+
+	private FluidStack toFluidStack(Fluid fluid) {
+		return fluid != null ? new FluidStack(fluid, Fluid.BUCKET_VOLUME) : null;
 	}
 
 	protected void emptyContainer(int slot, FluidTank tank){

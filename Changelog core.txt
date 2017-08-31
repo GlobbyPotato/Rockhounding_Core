@@ -1,3 +1,13 @@
+v1.07 changelog - hotfix
+	Fixed empty bucket handling possibly causing a crash on some machines
+
+v1.06 Changelog
+	Fixed some energy handling and compatibility issues
+	Various tweaks
+
+v1.05 changelog
+	Various tweaks
+
 v1.04 changelog
 	If the Fuel Blend is enabled, Lab Oven and Chemical Extractor no longer need a secondary redstone supply
 		Various tweaks
