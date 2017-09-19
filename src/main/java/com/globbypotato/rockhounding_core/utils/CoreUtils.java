@@ -22,6 +22,12 @@ public class CoreUtils {
 			&& insertingStack.getItemDamage() < insertingStack.getMaxDamage();
 	}
 
+	public static boolean hasConsumable(ItemStack consumable, ItemStack insertingStack, int step) {
+		return insertingStack != null 
+			&& ItemStack.areItemsEqualIgnoreDurability(consumable, insertingStack)
+			&& insertingStack.getItemDamage() <= insertingStack.getMaxDamage() - step;
+	}
+
 	public static boolean isBucketType(ItemStack insertingStack) {
 		return insertingStack != null 
 			&& (insertingStack.getItem() instanceof ItemBucket || insertingStack.getItem() instanceof UniversalBucket);

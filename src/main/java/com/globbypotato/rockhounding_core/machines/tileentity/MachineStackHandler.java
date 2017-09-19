@@ -152,6 +152,25 @@ public class MachineStackHandler extends ItemStackHandler{
 	}
 
 	/**
+	 * Damage the stack in the slot with a step
+	 * 
+	 * @param slot
+	 * @param step
+	 */
+	public void damageSlot(int slot, int step) {
+		if(this.getStackInSlot(slot) != null){
+			int damage = this.getStackInSlot(slot).getItemDamage() + step;
+			this.getStackInSlot(slot).setItemDamage(damage);
+			if(damage >= this.getStackInSlot(slot).getMaxDamage()){
+				this.getStackInSlot(slot).stackSize--;
+			}
+			if(this.getStackInSlot(slot).stackSize <= 0){
+				this.setStackInSlot(slot, null);
+			}
+		}
+	}
+
+	/**
 	 * Check if can insert a new fluid or fill the existing one
 	 * 
 	 * @param tank

@@ -12,13 +12,13 @@ import net.minecraftforge.oredict.OreDictionary;
 public class IReciper {
 
 /**
- * ROCKHOUNDING: CHEMISTRY   -   MINERAL ANALYZER
+ * ROCKHOUNDING: CHEMISTRY   -   LEACHING VAT
  * The Analyzer extracts extracts a mineral shard from a pool of shards composing a mineral category
  */
 
 	/**
-	 * Adds a custom recipe to the Mineral Analyzer.
-	 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
+	 * Adds a custom recipe to the Leaching Vat.
+	 * The input can be any itemstack. The output will another itemstack.
 	 * 
 	 * @param inputStack : the input itemstack
 	 * @param outputStack : the output itemstack
@@ -42,8 +42,8 @@ public class IReciper {
 	}
 
 	/**
-	 * Adds a custom recipe to the Mineral Analyzer.
-	 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
+	 * Adds a custom recipe to the Leaching Vat.
+	 * The input can be any itemstack. The output is an array of extractible elements depending on a specific probability.
 	 * 
 	 * @param inputStack : the input itemstack
 	 * @param elements : the list of elements extractible from the the input itemstack
@@ -76,7 +76,43 @@ public class IReciper {
 	}
 
 	/**
-	 * Removes a recipe from the Mineral Analyzer.
+	 * Adds a custom recipe to the Leaching Vat.
+	 * The input can be any itemstack. The output is an array of extractible elements depending on a each element specific gravity.
+	 * 
+	 * @param inputStack : the input itemstack
+	 * @param elements : the list of elements extractible from the the input itemstack
+	 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376)
+	 * @param hasGravity : true if the recipe must be processed considering the specific gravity
+	 */
+	protected static void sendToAnalyzer(ItemStack inputStack, List<ItemStack> elements, List<Integer> gravity, boolean hasGravity) {
+		if(elements.size() == gravity.size()){
+			NBTTagCompound input = new NBTTagCompound(); 
+			NBTTagCompound recipe = new NBTTagCompound();
+			NBTTagList elementList = new NBTTagList();
+			NBTTagList probabilityList = new NBTTagList();
+			inputStack.writeToNBT(input);
+			recipe.setTag("Input", input);
+			for(int i = 0; i < elements.size(); i++){
+                NBTTagCompound tagElements = new NBTTagCompound();
+                elements.get(i).writeToNBT(tagElements);
+                elementList.appendTag(tagElements);
+			}
+			recipe.setTag("Elements", elementList);
+			for(int i = 0; i < gravity.size(); i++){
+				if(gravity.get(i) > 0){
+					NBTTagCompound tagQuantity = new NBTTagCompound();
+					tagQuantity.setInteger("Probability" + i, gravity.get(i));
+					probabilityList.appendTag(tagQuantity);
+				}
+			}
+			recipe.setTag("Probabilities", probabilityList);
+			recipe.setBoolean("Gravity", hasGravity);
+			FMLInterModComms.sendMessage("rockhounding_chemistry", "addToAnalyzer", recipe);
+		}
+	}
+
+	/**
+	 * Removes a recipe from the Leaching Vat.
 	 * 
 	 * @param inputStack : the itemstack no longer allowed to be processed
 	 */
@@ -286,6 +322,35 @@ public class IReciper {
 			recipe.setTag("Probabilities", probabilityList);
 			FMLInterModComms.sendMessage("rockhounding_chemistry", "addToSizer", recipe);
 		}
+	}
+
+	/**
+	 * Adds a custom recipe to the Mineral Sizer.
+	 * 
+	 * @param inputStack : the input itemstack
+	 * @param elements : the list of outputs sorted from easiest to hardest to crush (Max 10)
+	 */
+	protected static void sendToSizer(ItemStack inputStack, List<ItemStack> elements) {
+		NBTTagCompound input = new NBTTagCompound(); 
+		NBTTagCompound recipe = new NBTTagCompound();
+		NBTTagList elementList = new NBTTagList();
+		NBTTagList comminutionList = new NBTTagList();
+		inputStack.writeToNBT(input);
+		recipe.setTag("Input", input);
+		for(int i = 0; i < elements.size(); i++){
+            NBTTagCompound tagElements = new NBTTagCompound();
+            elements.get(i).writeToNBT(tagElements);
+            elementList.appendTag(tagElements);
+		}
+		recipe.setTag("Elements", elementList);
+		for(int i = 0; i < elements.size(); i++){
+			NBTTagCompound tagLevel = new NBTTagCompound();
+			tagLevel.setInteger("Probability" + i, i+1);
+			comminutionList.appendTag(tagLevel);
+		}
+		recipe.setTag("Probabilities", comminutionList);
+		recipe.setBoolean("Comminution", true);
+		FMLInterModComms.sendMessage("rockhounding_chemistry", "addToSizer", recipe);
 	}
 
 	/**

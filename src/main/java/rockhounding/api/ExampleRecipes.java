@@ -13,13 +13,13 @@ public class ExampleRecipes extends IReciper{
 	public static void init(){
 
 /**
- * ROCKHOUNDING: CHEMISTRY   -   MINERAL ANALYZER
- * The Mineral Analyzer extracts a mineral shard from a pool of shards composing a mineral category
+ * ROCKHOUNDING: CHEMISTRY   -   LEACHING VAT
+ * The Leaching Vat extracts a mineral shard from a pool of shards composing a mineral category
  */
 
 		/**
-		 * Adds a custom recipe to the Mineral Analyzer.
-		 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
+		 * Adds a custom recipe to the Leaching Vat.
+		 * The input can be any itemstack. The output is an array of extractible elements depending on a specific probability.
 		 * 
 		 * @param inputStack : the input itemstack
 		 * @param elements : the list of elements extractible from the the input itemstack
@@ -28,8 +28,19 @@ public class ExampleRecipes extends IReciper{
 		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20));
 
 		/**
-		 * Adds a custom recipe to the Mineral Analyzer.
-		 * The input can be any itemstack. The output is an array of elements extractible from the input depending on a specific probability.
+		 * Adds a custom recipe to the Leaching Vat.
+		 * The input can be any itemstack. The output is an array of extractible elements depending on a each element specific gravity.
+		 * 
+		 * @param inputStack : the input itemstack
+		 * @param elements : the list of elements extractible from the the input itemstack
+		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376)
+		 * @param hasGravity : true if the recipe must be processed considering the specific gravity
+		 */
+		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(450, 158, 315, 175, 600, 1200), true);
+
+		/**
+		 * Adds a custom recipe to the Leaching Vat.
+		 * The input can be any itemstack. The output will another itemstack.
 		 * 
 		 * @param inputStack : the input itemstack
 		 * @param outputStack : the output itemstack
@@ -151,6 +162,14 @@ public class ExampleRecipes extends IReciper{
 		sendToSizer(new ItemStack(Blocks.SAND), new ItemStack(Items.DYE, 1, 9));
 
 		/**
+		 * Adds a custom recipe to the Mineral Sizer.
+		 * 
+		 * @param inputStack : the input itemstack
+		 * @param elements : the list of outputs sorted from easiest to hardest to crush (Max 10)
+		 */
+		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)));
+
+		/**
 		 * Removes a recipe from the Mineral Sizer.
 		 * 
 		 * @param inputStack : the object being crushed
@@ -199,25 +218,25 @@ public class ExampleRecipes extends IReciper{
  * The Deposition Chamber enriches an element into another compound
  */
 
-	/**
-	 * Adds a custom recipe to the Deposition Chamber.
-	 * Max fluid amount can be 10000mB. Temperature can be any integer up to 3000, pressure can be any integer up to 32000.
-	 * 
-	 * @param inputStack : the input itemstack
-	 * @param outputStack : the output itemstack
-	 * @param solvent : the fluid solvent. The amount will count for the recipe
-	 * @param temperature : the working temperature
-	 * @param pressure : the wotking pressure
-	 */
-	sendToDeposition(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHERBRICK), new FluidStack(FluidRegistry.getFluid("sulfuric_acid"), 5000), 1000, 24000);
-
-	/**
-	 * Removes a recipe from the Deposition Chamber.
-	 * 
-	 * @param outputStack : the outputted result.
-	 */
-	removeFromDeposition(new ItemStack(Items.NETHERBRICK));
-
+		/**
+		 * Adds a custom recipe to the Deposition Chamber.
+		 * Max fluid amount can be 10000mB. Temperature can be any integer up to 3000, pressure can be any integer up to 32000.
+		 * 
+		 * @param inputStack : the input itemstack
+		 * @param outputStack : the output itemstack
+		 * @param solvent : the fluid solvent. The amount will count for the recipe
+		 * @param temperature : the working temperature
+		 * @param pressure : the wotking pressure
+		 */
+		sendToDeposition(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHERBRICK), new FluidStack(FluidRegistry.getFluid("sulfuric_acid"), 5000), 1000, 24000);
+	
+		/**
+		 * Removes a recipe from the Deposition Chamber.
+		 * 
+		 * @param outputStack : the outputted result.
+		 */
+		removeFromDeposition(new ItemStack(Items.NETHERBRICK));
+	
 		
 	
 /**
@@ -225,54 +244,54 @@ public class ExampleRecipes extends IReciper{
  * The Casting bench produces several metal furnitures for the mod
  */
 
-	/**
-	 * Adds a custom recipe to the Casting bench.
-	 * Left-click to scroll the available patterns, right-click to add/remove the recipe items 
-	 * 
-	 * @param input : the OreDictionary String related to the input material
-	 * @param outputStack : the output itemstack. The stacksize is considered too
-	 * @param pattern : the numeric code of the required pattern. 0-Coils, 1-Rods, 2-Foils, 3-Arm, 4-Casing, 5-Customized
-	 */
-	sendToCasting("blockGold", new ItemStack(Items.GOLD_INGOT, 9), 5);
-
-	/**
-	 * Removes a recipe from the Casting bench.
-	 * 
-	 * @param outputStack : the output itemstack.
-	 */
-	removeFromCasting(new ItemStack(Items.GOLD_INGOT));
-
+		/**
+		 * Adds a custom recipe to the Casting bench.
+		 * Left-click to scroll the available patterns, right-click to add/remove the recipe items 
+		 * 
+		 * @param input : the OreDictionary String related to the input material
+		 * @param outputStack : the output itemstack. The stacksize is considered too
+		 * @param pattern : the numeric code of the required pattern. 0-Coils, 1-Rods, 2-Foils, 3-Arm, 4-Casing, 5-Customized
+		 */
+		sendToCasting("blockGold", new ItemStack(Items.GOLD_INGOT, 9), 5);
 	
+		/**
+		 * Removes a recipe from the Casting bench.
+		 * 
+		 * @param outputStack : the output itemstack.
+		 */
+		removeFromCasting(new ItemStack(Items.GOLD_INGOT));
+	
+		
 	
 /**
  * ROCKHOUNDING: CHEMISTRY   -   LAB BLENDER
  * The Lab Blender refines solid composts used by the mod
  */
-
-	/**
-	 * Adds a custom recipe to the Lab Blender via oredict.
-	 * 
-	 * @param oredict : the list of oredicted ingredients
-	 * @param quantity : the amount of each ingredient required
-	 * @param outputStack : the output itemstack. The stacksize is considered too
-	 */
-	sendToBlender(Arrays.asList("dustCoal"), Arrays.asList(9), new ItemStack(Items.COAL, 2));
-
-	/**
-	 * Adds a custom recipe to the Lab Blender via itemstack.
-	 * 
-	 * @param inputStack : the list of ingredient itemstacks
-	 * @param outputStack : the output itemstack. The stacksize is considered too
-	 */
-	sendToBlender(Arrays.asList(new ItemStack(Items.SLIME_BALL, 4), new ItemStack(Items.SLIME_BALL, 5)), new ItemStack(Items.MAGMA_CREAM, 2));
-
-	/**
-	 * Removes a recipe from the Lab Blender.
-	 * 
-	 * @param outputStack : the output itemstack
-	 */
-	removeFromBlender(new ItemStack(Items.GOLD_INGOT));
-
+	
+		/**
+		 * Adds a custom recipe to the Lab Blender via oredict.
+		 * 
+		 * @param oredict : the list of oredicted ingredients
+		 * @param quantity : the amount of each ingredient required
+		 * @param outputStack : the output itemstack. The stacksize is considered too
+		 */
+		sendToBlender(Arrays.asList("dustCoal"), Arrays.asList(9), new ItemStack(Items.COAL, 2));
+	
+		/**
+		 * Adds a custom recipe to the Lab Blender via itemstack.
+		 * 
+		 * @param inputStack : the list of ingredient itemstacks
+		 * @param outputStack : the output itemstack. The stacksize is considered too
+		 */
+		sendToBlender(Arrays.asList(new ItemStack(Items.SLIME_BALL, 4), new ItemStack(Items.SLIME_BALL, 5)), new ItemStack(Items.MAGMA_CREAM, 2));
+	
+		/**
+		 * Removes a recipe from the Lab Blender.
+		 * 
+		 * @param outputStack : the output itemstack
+		 */
+		removeFromBlender(new ItemStack(Items.GOLD_INGOT));
+	
 
 
 /**
