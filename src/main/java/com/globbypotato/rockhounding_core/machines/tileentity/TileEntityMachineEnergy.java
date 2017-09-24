@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.globbypotato.rockhounding_core.CoreItems;
 import com.globbypotato.rockhounding_core.handlers.ModConfig;
+import com.globbypotato.rockhounding_core.utils.CoreUtils;
 import com.globbypotato.rockhounding_core.utils.FuelUtils;
 
 import cofh.api.energy.EnergyStorage;
@@ -46,7 +47,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		this.FUEL_SLOT = fuelSlot;
 	}
 
-	//---------------- CUSTOM ----------------
+	//---------------- HANDLER ----------------
 	@Override
 	public boolean hasRF() { 
 		return false; 
@@ -57,30 +58,44 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		return 0; 
 	}
 
-	@Override
-	public boolean canInduct() {
-		return hasPermanentInduction() || (!hasPermanentInduction() && (INPUT_SLOTS > 0 && input.getStackInSlot(FUEL_SLOT) != null && input.getStackInSlot(FUEL_SLOT).isItemEqual(new ItemStack(CoreItems.heat_inductor))));
-	}
-
-	public boolean hasPermanentInduction() { 
-		return ModConfig.allowInductor && permanentInductor; 
-	}
-
-	public boolean hasFuelBlend() { 
-		return ModConfig.enableFuelBlend; 
+	public boolean isActive(){
+		return activation;
 	}
 
 	protected boolean isRFGatedByBlend(){
 		return false;
 	}
 
+
+
+	//---------------- INDUCTION ----------------
+	@Override
+	public boolean canInduct() {
+		return hasPermanentInduction() || (!hasPermanentInduction() && (INPUT_SLOTS > 0 && input.getStackInSlot(FUEL_SLOT) != null && input.getStackInSlot(FUEL_SLOT).isItemEqual(new ItemStack(CoreItems.heat_inductor))));
+	}
+
+	public boolean hasPermanentInduction() { 
+		return allowPermanentInduction() && isInductionActive(); 
+	}
+
+	public boolean isInductionActive(){
+		return permanentInductor;
+	}
+
+	public boolean allowPermanentInduction(){
+		return ModConfig.allowInductor;
+	}
+
+
+
+	//---------------- FUEL ----------------
 	protected void fuelHandler(ItemStack stack) {
 		if(stack != null) {
 			if(!hasFuelBlend() && FuelUtils.isItemFuel(stack) ){
 				burnFuel(stack);
 			}else if(hasFuelBlend() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.fuel_blend))){
 				burnBlend(stack);
-			}else if(ModConfig.allowInductor && !permanentInductor && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.heat_inductor))){
+			}else if(allowPermanentInduction() && !isInductionActive() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.heat_inductor))){
 				permanentInductor = true;
 				input.setStackInSlot(FUEL_SLOT, null);
 			}
@@ -99,6 +114,23 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		}
 	}
 
+	public boolean isGatedPowerSource(ItemStack insertingStack){
+		return (!ModConfig.enableFuelBlend && FuelUtils.isItemFuel(insertingStack) && !isFuelGated()) 
+			|| CoreUtils.hasInductor(insertingStack)
+			|| (ModConfig.enableFuelBlend && CoreUtils.hasBlend(insertingStack) && !isFuelGated());
+	}
+
+	public boolean isFuelGated() {
+		return allowPermanentInduction() && isInductionActive() && ModConfig.gatedFuel;
+	}
+
+
+
+	//---------------- BLEND ----------------
+	public boolean hasFuelBlend() { 
+		return ModConfig.enableFuelBlend; 
+	}
+
 	protected void burnBlend(ItemStack stack) {
 		if(stack != null) {
 			if( this.getPower() <= (this.getPowerMax() - ModConfig.fuelBlendPower) ){
@@ -111,6 +143,9 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		}
 	}
 
+
+
+	//---------------- REDSTONE ----------------
 	protected boolean hasRedstone(ItemStack insertingStack) {
 		return !hasFuelBlend()
 			&& insertingStack != null 
@@ -166,6 +201,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		this.redstoneCount = compound.getInteger("RedstoneCount");
 		this.cookTime = compound.getInteger("CookTime");
 		this.permanentInductor = compound.getBoolean("Inductor");
+		this.activation = compound.getBoolean("Activation");
 		this.storage.readFromNBT(compound.getCompoundTag("StorageNBT"));
 
 	}
@@ -176,8 +212,9 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		compound.setInteger("PowerCount", this.powerCount);
 		compound.setInteger("RedstoneCount", this.redstoneCount);
 		compound.setInteger("CookTime", this.cookTime);
-		compound.setBoolean("Inductor", this.permanentInductor);
-		
+		compound.setBoolean("Inductor", isInductionActive());
+		compound.setBoolean("Activation", isActive());
+
 		NBTTagCompound stotageNBT = new NBTTagCompound();
 		this.storage.writeToNBT(stotageNBT);
 		compound.setTag("StorageNBT", stotageNBT);

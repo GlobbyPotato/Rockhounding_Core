@@ -8,6 +8,7 @@ public class ModConfig {
 	public static final String CATEGORY_FUEL = "Fuel";
 
 	public static boolean allowInductor;
+	public static boolean gatedFuel;
 
 	public static boolean enableRainRefill;
 
@@ -20,6 +21,7 @@ public class ModConfig {
 		config.load();
 
 		allowInductor = config.get(									CATEGORY_TOOLS, "PermanentInduction",		true,	"Make the Induction Heating Interface a machine permanent upgrade").getBoolean();
+		gatedFuel = config.get(										CATEGORY_TOOLS, "GatedBurnableFuel",		false,	"Fuel/blend no longer accepted if permanent induction is active").getBoolean();
 
 		enableFuelBlend = config.get(								CATEGORY_FUEL, "EnableFuelBlend",			false,	"Replaces regular fueling with a customized fuel").getBoolean();
 		fuelBlendPower = config.get(								CATEGORY_FUEL, "FuelBlendPower",			600,	"The burntime of each fuel blend item").getInt();

@@ -45,7 +45,7 @@ public class CoreUtils {
 		return insertingStack != null && (ItemStack.areItemsEqual(insertingStack, inductor));
 	}
 
-	private static boolean hasBlend(ItemStack insertingStack) {
+	public static boolean hasBlend(ItemStack insertingStack) {
 		return insertingStack != null && (ItemStack.areItemsEqual(insertingStack, blend));
 	}
 

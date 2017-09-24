@@ -1,3 +1,12 @@
+v1.09 changelog
+	Config Option 
+		Can set to no longer accept regular fuel/blend if a permanent Induction is activated (disabled by default)
+	Miscs
+		Various updates
+
+v1.08 changelog
+	Various tweaks
+
 v1.07 changelog - hotfix
 	Fixed empty bucket handling possibly causing a crash on some machines
 
