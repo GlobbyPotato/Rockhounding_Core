@@ -1,3 +1,6 @@
+v1.10 changelog
+	Minor tweaks
+
 v1.09 changelog
 	Config Option 
 		Can set to no longer accept regular fuel/blend if a permanent Induction is activated (disabled by default)

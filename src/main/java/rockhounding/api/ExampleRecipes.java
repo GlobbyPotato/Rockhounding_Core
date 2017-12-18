@@ -23,9 +23,10 @@ public class ExampleRecipes extends IReciper{
 		 * 
 		 * @param inputStack : the input itemstack
 		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param probability : the list of probability of each element to be extracted
+		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376). Alternatively the list of probability of each element to be extracted
+		 * @param hasGravity : true if the recipe must be processed considering the specific gravity, false to use leaching chance
 		 */
-		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20));
+		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20), false);
 
 		/**
 		 * Adds a custom recipe to the Leaching Vat.
@@ -33,7 +34,7 @@ public class ExampleRecipes extends IReciper{
 		 * 
 		 * @param inputStack : the input itemstack
 		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376)
+		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376). Alternatively the list of probability of each element to be extracted
 		 * @param hasGravity : true if the recipe must be processed considering the specific gravity
 		 */
 		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(450, 158, 315, 175, 600, 1200), true);
@@ -145,13 +146,24 @@ public class ExampleRecipes extends IReciper{
  */
 
 		/**
-		 * Adds a custom recipe to the Mineral Sizer.
+		 * Adds a custom recipe to the Mineral Sizer using the sizing chance.
 		 * 
 		 * @param inputStack : the input itemstack
 		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param probability : the list of probability of each element to be extracted
+		 * @param values : the list of probability of each element to be extracted or the comminution
+		 * @param hasComminution : determine if the sizing method will be randomized (false) or by comminution (true)
 		 */
-		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20));
+		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20), false);
+
+		/**
+		 * Adds a custom recipe to the Mineral Sizer using the comminutions.
+		 * 
+		 * @param inputStack : the input itemstack
+		 * @param elements : the list of outputs
+		 * @param values : the list of probability of each element to be extracted or the comminution
+		 * @param hasComminution : determine if the sizing method will be randomized (false) or by comminution (true)
+		 */
+		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(1, 3, 3, 4, 7, 10), true);
 
 		/**
 		 * Adds a custom recipe to the Mineral Sizer.
@@ -160,14 +172,6 @@ public class ExampleRecipes extends IReciper{
 		 * @param outputStack : the output itemstack
 		 */
 		sendToSizer(new ItemStack(Blocks.SAND), new ItemStack(Items.DYE, 1, 9));
-
-		/**
-		 * Adds a custom recipe to the Mineral Sizer.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of outputs sorted from easiest to hardest to crush (Max 10)
-		 */
-		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)));
 
 		/**
 		 * Removes a recipe from the Mineral Sizer.
