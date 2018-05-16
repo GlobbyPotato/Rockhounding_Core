@@ -406,7 +406,6 @@ public class IReciper {
 		if(dusts.size() == quantities.size()){
 			NBTTagCompound recipe = new NBTTagCompound();
 			NBTTagCompound ingot = new NBTTagCompound();
-			NBTTagCompound scrap = new NBTTagCompound();
 			NBTTagList dustList = new NBTTagList();
 			NBTTagList quantityList = new NBTTagList();
 			recipe.setString("Display", displayName);
@@ -472,10 +471,8 @@ public class IReciper {
 		recipe.setTag("Output", output);
 		solventStack.writeToNBT(solvent);
 		recipe.setTag("Solvent", solvent);
-		if(temperature > 3000) temperature = 3000;
-		recipe.setInteger("Temperature", temperature);
-		if(pressure > 32000) pressure = 32000;
-		recipe.setInteger("Pressure", pressure);
+		recipe.setInteger("Temperature", temperature > 3000 ? temperature : 3000);
+		recipe.setInteger("Pressure", pressure > 32000 ? pressure : 32000);
 		FMLInterModComms.sendMessage("rockhounding_chemistry", "addToDeposition", recipe);
 	}
 

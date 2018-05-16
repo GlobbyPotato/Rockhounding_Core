@@ -65,9 +65,8 @@ public interface IEnergyTransport extends IEnergyProvider, IEnergyReceiver {
 
 			if (forward) {
 				return this == BALANCE ? RECEIVE : this == RECEIVE ? SEND : BALANCE;
-			} else {
-				return this == BALANCE ? SEND : this == SEND ? RECEIVE : BALANCE;
 			}
+			return this == BALANCE ? SEND : this == SEND ? RECEIVE : BALANCE;
 		}
 	}
 

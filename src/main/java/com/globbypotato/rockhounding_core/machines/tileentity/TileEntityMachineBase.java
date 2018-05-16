@@ -10,14 +10,14 @@ import net.minecraft.tileentity.TileEntity;
 public abstract class TileEntityMachineBase extends TileEntity {
 
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+		return !isInvalid() && playerIn.getDistanceSq(this.pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = getUpdateTag();
 		this.writeToNBT(tag);
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
+		return new SPacketUpdateTileEntity(this.pos, getBlockMetadata(), tag);
 	}
 
 	@Override
@@ -45,9 +45,9 @@ public abstract class TileEntityMachineBase extends TileEntity {
 	//Courtesy of mcjtylib
 	public void markDirtyClient() {
 		markDirty();
-		if (worldObj != null) {
-			IBlockState state = worldObj.getBlockState(getPos());
-			worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+		if (this.worldObj != null) {
+			IBlockState state = this.worldObj.getBlockState(getPos());
+			this.worldObj.notifyBlockUpdate(getPos(), state, state, 3);
 		}
 	}
 

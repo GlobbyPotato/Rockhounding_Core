@@ -18,14 +18,14 @@ public class BaseArray extends BaseItem {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int i = stack.getItemDamage();
-		if( i < 0 || i >= itemArray.length){ i = 0; }
-		return super.getUnlocalizedName() + "." + itemArray[i];
+		if( i < 0 || i >= this.itemArray.length){ i = 0; }
+		return super.getUnlocalizedName() + "." + this.itemArray[i];
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems){
-		for(int i = 0; i < itemArray.length; i++){subItems.add(new ItemStack(itemIn, 1, i));}
+		for(int i = 0; i < this.itemArray.length; i++){subItems.add(new ItemStack(itemIn, 1, i));}
 	}
 
 }

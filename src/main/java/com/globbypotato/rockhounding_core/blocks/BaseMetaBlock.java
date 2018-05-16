@@ -42,7 +42,7 @@ public class BaseMetaBlock extends Block{
 
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) {
-		for (int i = 0; i < array.length; i++){
+		for (int i = 0; i < this.array.length; i++){
 			list.add(new ItemStack(itemIn, 1, i));
 		}
 	}

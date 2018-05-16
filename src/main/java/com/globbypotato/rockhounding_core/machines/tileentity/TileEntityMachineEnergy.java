@@ -59,7 +59,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	}
 
 	public boolean isActive(){
-		return activation;
+		return this.activation;
 	}
 
 	protected boolean isRFGatedByBlend(){
@@ -71,7 +71,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	//---------------- INDUCTION ----------------
 	@Override
 	public boolean canInduct() {
-		return hasPermanentInduction() || (!hasPermanentInduction() && (INPUT_SLOTS > 0 && input.getStackInSlot(FUEL_SLOT) != null && input.getStackInSlot(FUEL_SLOT).isItemEqual(new ItemStack(CoreItems.heat_inductor))));
+		return hasPermanentInduction() || (!hasPermanentInduction() && (this.input.getSlots() > 0 && this.input.getStackInSlot(this.FUEL_SLOT) != null && this.input.getStackInSlot(this.FUEL_SLOT).isItemEqual(new ItemStack(CoreItems.heat_inductor))));
 	}
 
 	public boolean hasPermanentInduction() { 
@@ -79,7 +79,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	}
 
 	public boolean isInductionActive(){
-		return permanentInductor;
+		return this.permanentInductor;
 	}
 
 	public boolean allowPermanentInduction(){
@@ -96,8 +96,8 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 			}else if(hasFuelBlend() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.fuel_blend))){
 				burnBlend(stack);
 			}else if(allowPermanentInduction() && !isInductionActive() && ItemStack.areItemsEqual(stack, new ItemStack(CoreItems.heat_inductor))){
-				permanentInductor = true;
-				input.setStackInSlot(FUEL_SLOT, null);
+				this.permanentInductor = true;
+				this.input.setStackInSlot(this.FUEL_SLOT, null);
 			}
 		}
 	}
@@ -105,10 +105,10 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	protected void burnFuel(ItemStack stack) {
 		if(stack != null) {
 			if( this.getPower() <= (this.getPowerMax() - FuelUtils.getItemBurnTime(stack)) ){
-				powerCount += FuelUtils.getItemBurnTime(stack);
+				this.powerCount += FuelUtils.getItemBurnTime(stack);
 				stack.stackSize--;
 				if(stack.stackSize <= 0){
-					input.setStackInSlot(FUEL_SLOT, stack.getItem().getContainerItem(input.getStackInSlot(FUEL_SLOT)));
+					this.input.setStackInSlot(this.FUEL_SLOT, stack.getItem().getContainerItem(this.input.getStackInSlot(this.FUEL_SLOT)));
 				}
 			}
 		}
@@ -134,10 +134,10 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	protected void burnBlend(ItemStack stack) {
 		if(stack != null) {
 			if( this.getPower() <= (this.getPowerMax() - ModConfig.fuelBlendPower) ){
-				powerCount += ModConfig.fuelBlendPower;
+				this.powerCount += ModConfig.fuelBlendPower;
 				stack.stackSize--;
 				if(stack.stackSize <= 0){
-					input.setStackInSlot(FUEL_SLOT, null);
+					this.input.setStackInSlot(this.FUEL_SLOT, null);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	}
 
 	protected void redstoneHandler(int slot, int cooktime) {
-		ItemStack stack = input.getStackInSlot(slot);
+		ItemStack stack = this.input.getStackInSlot(slot);
 		if(stack != null){
 			if(stack.getItem() == Items.REDSTONE && this.getRedstone() <= (this.getRedstoneMax() - cooktime)){
 				burnRedstone(slot, stack, cooktime);
@@ -164,10 +164,10 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 	}
 
 	private void burnRedstone(int slot, ItemStack stack, int charge) {
-		redstoneCount += charge; 
+		this.redstoneCount += charge; 
 		stack.stackSize--;
 		if(stack.stackSize <= 0){
-			input.setStackInSlot(slot, null);
+			this.input.setStackInSlot(slot, null);
 		}
 	}
 
@@ -281,17 +281,17 @@ public abstract class TileEntityMachineEnergy extends TileEntityMachineInv  impl
 		int energyReceived = 0;
 		if(isRedstoneFilled() || canRefillOnlyPower() ){
 	        if(!isFullPower()){
-		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), storage.getEnergyStored());
+		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), this.storage.getEnergyStored());
 		        this.powerCount += energyReceived;
-	        	storage.extractEnergy(energyReceived, false);
+	        	this.storage.extractEnergy(energyReceived, false);
 	        }else{
 				this.powerCount = this.getPowerMax();
 			}
 		}else if(redstoneIsRefillable()){
 			if(!isFullRedstone()){
-		        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), storage.getEnergyStored());
+		        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), this.storage.getEnergyStored());
 	        	this.redstoneCount += energyReceived;
-	        	storage.extractEnergy(energyReceived, false);
+	        	this.storage.extractEnergy(energyReceived, false);
 			}else{
 				this.redstoneCount = this.getRedstoneMax();
 			}

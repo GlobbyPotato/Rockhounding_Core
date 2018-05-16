@@ -12,16 +12,15 @@ public class Translator {
 	public static String translateToLocal(String key) {
 		if (I18n.canTranslate(key)) {
 			return I18n.translateToLocal(key);
-		} else {
-			return I18n.translateToFallback(key);
 		}
+		return I18n.translateToFallback(key);
 	}
 
 	public static String translateToLocalFormatted(String key, Object... format) {
 		String s = translateToLocal(key);
 		try {
 			return String.format(s, format);
-		} catch (IllegalFormatException e) {
+		} catch (@SuppressWarnings("unused") IllegalFormatException e) {
 			String errorMessage = "Format error: " + s;
 			return errorMessage;
 		}

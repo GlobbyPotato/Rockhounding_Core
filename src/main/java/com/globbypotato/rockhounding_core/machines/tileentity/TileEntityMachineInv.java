@@ -14,8 +14,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public abstract class TileEntityMachineInv extends TileEntityMachineBase implements ITickable{
 
-	public final int INPUT_SLOTS;
-	public final int OUTPUT_SLOTS;
 	public int SIZE;
 	protected MachineStackHandler input;
 	protected IItemHandlerModifiable automationInput;
@@ -27,21 +25,19 @@ public abstract class TileEntityMachineInv extends TileEntityMachineBase impleme
 	public static final int CONSUMABLE_SLOT = 2;
 
 	public abstract int getGUIHeight();
-	
-	public TileEntityMachineInv(int inputSlots, int outputSlots){
-		this.INPUT_SLOTS = inputSlots;
-		this.OUTPUT_SLOTS = outputSlots;
-		this.SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
-		input = new MachineStackHandler(inputSlots,this){
+	public TileEntityMachineInv(int inputSlots, int outputSlots){
+		this.SIZE = inputSlots + outputSlots;
+
+		this.input = new MachineStackHandler(inputSlots, this){
 			@Override
 			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 				return super.insertItem(slot, stack, simulate);
 			}
 		};
-		automationInput = new WrappedItemHandler(input, WriteMode.IN_OUT);
+		this.automationInput = new WrappedItemHandler(this.input, WriteMode.IN_OUT);
 
-		output = new MachineStackHandler(outputSlots,this){
+		this.output = new MachineStackHandler(outputSlots,this){
 			@Override
 			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 				return stack;
@@ -51,12 +47,12 @@ public abstract class TileEntityMachineInv extends TileEntityMachineBase impleme
 				this.tile.markDirty();
 		    }
 		};
-		automationOutput = new WrappedItemHandler(output, WriteMode.IN_OUT){
+		this.automationOutput = new WrappedItemHandler(this.output, WriteMode.IN_OUT){
 			@Override
 			public ItemStack extractItem(int slot, int amount, boolean simulate){
 				ItemStack stack = getStackInSlot(slot);
 				if(stack!= null) return super.extractItem(slot, amount, simulate);
-				else return null;
+				return null;
 			}
 		};
 
@@ -75,25 +71,25 @@ public abstract class TileEntityMachineInv extends TileEntityMachineBase impleme
 	}
 
 	public IItemHandler getInventory(){
-		return new CombinedInvWrapper(input, output);
+		return new CombinedInvWrapper(this.input, this.output);
 	}
 
 	public IItemHandler getCombinedHandler(){
-		return new CombinedInvWrapper(new IItemHandlerModifiable[]{automationInput, automationOutput});
+		return new CombinedInvWrapper(new IItemHandlerModifiable[]{this.automationInput, this.automationOutput});
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		input.deserializeNBT(compound.getCompoundTag("input"));
-		output.deserializeNBT(compound.getCompoundTag("output"));
+		this.input.deserializeNBT(compound.getCompoundTag("input"));
+		this.output.deserializeNBT(compound.getCompoundTag("output"));
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setTag("input", input.serializeNBT());
-		compound.setTag("output", output.serializeNBT());
+		compound.setTag("input", this.input.serializeNBT());
+		compound.setTag("output", this.output.serializeNBT());
 		return compound;
 	}
 

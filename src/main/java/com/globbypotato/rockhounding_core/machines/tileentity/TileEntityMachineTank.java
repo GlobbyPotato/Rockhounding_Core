@@ -32,14 +32,14 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 	public TileEntityMachineTank(int inputSlots, int outputSlots, int fuelSlot) {
 		super(inputSlots, outputSlots, fuelSlot);
 
-		lavaTank = new FluidTank(Fluid.BUCKET_VOLUME){
+		this.lavaTank = new FluidTank(Fluid.BUCKET_VOLUME){
 			@Override  
 			public boolean canFillFluidType(FluidStack fluid){
 		        return fluid.isFluidEqual(lavaStack());
 		    }
 		};
-		lavaTank.setTileEntity(this);
-		lavaTank.setCanDrain(false);
+		this.lavaTank.setTileEntity(this);
+		this.lavaTank.setCanDrain(false);
 	}
 
 
@@ -75,7 +75,7 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return true;
-		else return super.hasCapability(capability, facing);
+		return super.hasCapability(capability, facing);
 	}
 
 	@Override
@@ -107,37 +107,37 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 		return false;
 	}
 
-	private boolean isValidFluidStack(ItemStack insertingStack, FluidStack fluidStack) {
+	private static boolean isValidFluidStack(ItemStack insertingStack, FluidStack fluidStack) {
 		if(insertingStack != null && fluidStack != null){
 			return FluidUtil.getFluidContained(insertingStack).containsFluid(fluidStack);
 		}
 		return false;
 	}
 
-	private FluidStack toFluidStack(Fluid fluid) {
+	private static FluidStack toFluidStack(Fluid fluid) {
 		return fluid != null ? new FluidStack(fluid, Fluid.BUCKET_VOLUME) : null;
 	}
 
 	protected void emptyContainer(int slot, FluidTank tank){
-		if( FluidUtil.getFluidContained(input.getStackInSlot(slot)) != null){
-			if(FluidUtil.tryEmptyContainer(input.getStackInSlot(slot), tank, 1000, null, false) != null){
-				input.setStackInSlot(slot,FluidUtil.tryEmptyContainer(input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true));
+		if( FluidUtil.getFluidContained(this.input.getStackInSlot(slot)) != null){
+			if(FluidUtil.tryEmptyContainer(this.input.getStackInSlot(slot), tank, 1000, null, false) != null){
+				this.input.setStackInSlot(slot,FluidUtil.tryEmptyContainer(this.input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true));
 			}
 		}
 	}
 
 	protected void fillContainer(int slot, FluidTank tank) {
-		if (CoreUtils.isBucketType(input.getStackInSlot(slot)) && tank.getFluid() != null && tank.getFluidAmount() >= Fluid.BUCKET_VOLUME) {
-			if (FluidUtil.tryFillContainer(input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, false) != null) {
-				if (input.getStackInSlot(slot).stackSize > 1) {
-					ItemStack droppingBeaker = FluidUtil.tryFillContainer(input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true);
+		if (CoreUtils.isBucketType(this.input.getStackInSlot(slot)) && tank.getFluid() != null && tank.getFluidAmount() >= Fluid.BUCKET_VOLUME) {
+			if (FluidUtil.tryFillContainer(this.input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, false) != null) {
+				if (this.input.getStackInSlot(slot).stackSize > 1) {
+					ItemStack droppingBeaker = FluidUtil.tryFillContainer(this.input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true);
 					EnumFacing front = EnumFacing.getFront(getBlockMetadata());
-					BlockPos frontPos = pos.offset(front.getOpposite());
-					EntityItem entityitem = new EntityItem(worldObj, frontPos.getX() + 0.5D, frontPos.getY() + 0.5D, frontPos.getZ() + 0.5D, droppingBeaker);
-					worldObj.spawnEntityInWorld(entityitem);
-					input.decrementSlot(slot);
+					BlockPos frontPos = this.pos.offset(front.getOpposite());
+					EntityItem entityitem = new EntityItem(this.worldObj, frontPos.getX() + 0.5D, frontPos.getY() + 0.5D, frontPos.getZ() + 0.5D, droppingBeaker);
+					this.worldObj.spawnEntityInWorld(entityitem);
+					this.input.decrementSlot(slot);
 				} else {
-					input.setStackInSlot(slot, FluidUtil.tryFillContainer(input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true));
+					this.input.setStackInSlot(slot, FluidUtil.tryFillContainer(this.input.getStackInSlot(slot), tank, Fluid.BUCKET_VOLUME, null, true));
 				}
 			}
 		}
@@ -157,8 +157,8 @@ public abstract class TileEntityMachineTank extends TileEntityMachineEnergy impl
 	public void lavaHandler(){
 		if(!ModConfig.enableFuelBlend){
 			if(this.getPower() <= this.getPowerMax() - lavaBurntime()){
-				if(lavaTank.getFluidAmount() >= Fluid.BUCKET_VOLUME){
-					lavaTank.getFluid().amount -= Fluid.BUCKET_VOLUME;
+				if(this.lavaTank.getFluidAmount() >= Fluid.BUCKET_VOLUME){
+					this.lavaTank.getFluid().amount -= Fluid.BUCKET_VOLUME;
 					this.powerCount += lavaBurntime();
 					this.markDirtyClient();
 				}

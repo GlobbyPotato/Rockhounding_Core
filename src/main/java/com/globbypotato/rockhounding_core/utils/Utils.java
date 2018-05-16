@@ -2,15 +2,12 @@ package com.globbypotato.rockhounding_core.utils;
 
 import java.util.ArrayList;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
-
 public class Utils {
-
+/*
 	public static void increment(ItemStackHandler handler, int slot){
 		ItemStack temp = handler.getStackInSlot(slot);
-
 	}
+
 	public static void decrement(ItemStackHandler handler, int slot){
 		if(handler.extractItem(slot, 1, true) == null){
 			handler.setStackInSlot(slot, null);
@@ -30,6 +27,7 @@ public class Utils {
 		return output;
 	}
 
+*/
 	public static ArrayList<Integer> intArrayToList(int[] array){
 		ArrayList<Integer> temp = new ArrayList<Integer>(array.length);
 		for(int i=0;i<array.length;i++){

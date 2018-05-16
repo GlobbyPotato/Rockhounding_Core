@@ -19,31 +19,31 @@ public class WrappedItemHandler implements IItemHandlerModifiable{
 
     @Override
     public int getSlots(){
-        return compose.getSlots();
+        return this.compose.getSlots();
     }
 
     @Override
     public ItemStack getStackInSlot(int slot){
-        return compose.getStackInSlot(slot);
+        return this.compose.getStackInSlot(slot);
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-        if (mode == WriteMode.IN || mode == WriteMode.IN_OUT)
-            return compose.insertItem(slot, stack, simulate);
-        else return stack;
+        if (this.mode == WriteMode.IN || this.mode == WriteMode.IN_OUT)
+            return this.compose.insertItem(slot, stack, simulate);
+		return stack;
     }
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate){
-        if (mode == WriteMode.OUT || mode == WriteMode.IN_OUT)
-            return compose.extractItem(slot, amount, simulate);
-        else return null;
+        if (this.mode == WriteMode.OUT || this.mode == WriteMode.IN_OUT)
+            return this.compose.extractItem(slot, amount, simulate);
+		return null;
     }
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack){
-        compose.setStackInSlot(slot, stack);
+        this.compose.setStackInSlot(slot, stack);
     }
 
     public enum WriteMode{
