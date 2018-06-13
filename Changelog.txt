@@ -1,3 +1,6 @@
+v1.11 changelog
+	Misc fixes
+
 v1.10 changelog
 	Minor tweaks
 
