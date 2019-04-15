@@ -7,447 +7,178 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import rockhounding.api.machines.IReciper;
 
 public class ExampleRecipes extends IReciper{
 	public static void init(){
 
 /**
- * ROCKHOUNDING: CHEMISTRY   -   LEACHING VAT
- * The Leaching Vat extracts a mineral shard from a pool of shards composing a mineral category
+ * ROCKHOUNDING: CHEMISTRY
  */
 
-		/**
-		 * Adds a custom recipe to the Leaching Vat.
-		 * The input can be any itemstack. The output is an array of extractible elements depending on a specific probability.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376). Alternatively the list of probability of each element to be extracted
-		 * @param hasGravity : true if the recipe must be processed considering the specific gravity, false to use leaching chance
-		 */
-		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20), false);
+	//POLLUTANT FLUIDS
+		sendToPollutantFluids(new FluidStack(FluidRegistry.WATER, 1000));
+		removeFromPollutantFluids(new FluidStack(FluidRegistry.getFluid("toxic_waste"), 1000));
 
-		/**
-		 * Adds a custom recipe to the Leaching Vat.
-		 * The input can be any itemstack. The output is an array of extractible elements depending on a each element specific gravity.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param gravity : the list of gravity for each element (multiplied x100, i.e. 3.76 must be written as 376). Alternatively the list of probability of each element to be extracted
-		 * @param hasGravity : true if the recipe must be processed considering the specific gravity
-		 */
-		sendToAnalyzer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(450, 158, 315, 175, 600, 1200), true);
+	//POLLUTANT GASES
+		sendToPollutantGases(new FluidStack(FluidRegistry.getFluid("xenon"), 1000));
+		removeFromPollutantGases(new FluidStack(FluidRegistry.getFluid("ammonia"), 1000));
 
-		/**
-		 * Adds a custom recipe to the Leaching Vat.
-		 * The input can be any itemstack. The output will another itemstack.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param outputStack : the output itemstack
-		 */
-		sendToAnalyzer(new ItemStack(Blocks.SAND), new ItemStack(Items.DYE, 1, 2));
+	//TOXIC MUTATION
+		sendToToxicMutation(new ItemStack(Items.LEATHER), new ItemStack(Items.ROTTEN_FLESH));
+		removeFromToxicMutationByInput(new ItemStack(Items.LEATHER));
+		removeFromToxicMutationByOutput(new ItemStack(Items.ROTTEN_FLESH));
 
-		/**
-		 * @param inputStack : the itemstack no longer allowed to be processed
-		 */
-		removeFromAnalyzer(new ItemStack(Blocks.HARDENED_CLAY));
+	//SLURRY POND
+		sendToSlurryPond(new ItemStack(Items.MAGMA_CREAM), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.LAVA, 1000));
+		removeFromSlurryPondByInput(new ItemStack(Items.MAGMA_CREAM));
+		removeFromSlurryPondByBath(new FluidStack(FluidRegistry.WATER, 1000));
+		removeFromSlurryPondBySlurry(new FluidStack(FluidRegistry.LAVA, 1000));
+
+	//SEASONING RACK
+		sendToSeasoningRack(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Items.LEATHER));
+		removeFromSeasoningRackByInput(new ItemStack(Items.ROTTEN_FLESH));
+		removeFromSeasoningRackByOutput(new ItemStack(Items.LEATHER));
+
+	//RETENTION VAT
+		sendToRetentionVat(new FluidStack(FluidRegistry.WATER, 1000), Arrays.asList(new ItemStack(Blocks.GRAVEL), new ItemStack(Blocks.SAND), new ItemStack(Blocks.CLAY)), Arrays.asList(1.50F, 3.25F, 8.66F));
+		removeFromRetentionVatByInput(new FluidStack(FluidRegistry.WATER, 1000));
+
+	//PROFILING BENCH
+		sendToProfilingBench(new ItemStack(Blocks.GOLD_BLOCK), new ItemStack(Items.GOLD_INGOT, 9), 7);
+		sendToProfilingBench("blockGold", new ItemStack(Items.GOLD_INGOT, 9), 7);
+		removeFromProfilingBenchByOredict("blockGold");
+		removeFromProfilingBenchByInput(new ItemStack(Blocks.GOLD_BLOCK));
+		removeFromProfilingBenchByOutput(new ItemStack(Items.GOLD_INGOT));
+
+	//MINERAL SIZER
+		sendToMineralSizer(new ItemStack(Blocks.STONE), Arrays.asList(new ItemStack(Blocks.GRAVEL), new ItemStack(Blocks.SAND), new ItemStack(Blocks.CLAY)), Arrays.asList(4, 6, 14));
+		removeFromMineralSizerByInput(new ItemStack(Blocks.STONE));
+
+	//METAL ALLOYER
+		sendToMetalAlloyer(Arrays.asList("dustRedstone", "dustGlowstone"), Arrays.asList(70, 40), new ItemStack(Items.GHAST_TEAR, 9));
+		removeFromMetalAlloyerByOutput(new ItemStack(Items.GHAST_TEAR));
+		removeFromMetalAlloyerByOredict("dustRedstone");
+
+	//MATERIAL CABINET
+		sendToMaterialCabinet("Gl", "dustGlowstone", "Glowstone");
+		removeFromMaterialCabinetByOredict("dustRedstone");
+
+	//LEACHING VAT
+		sendToLeachingVat(new ItemStack(Blocks.NETHERRACK), Arrays.asList(new ItemStack(Blocks.GRAVEL), new ItemStack(Blocks.SAND), new ItemStack(Blocks.CLAY)), Arrays.asList(4.50F, 5.25F, 7.66F), new FluidStack(FluidRegistry.LAVA, 500));
+		removeFromLeachingVatByInput(new ItemStack(Blocks.NETHERRACK));
+
+	//LAB OVEN
+		sendToLabOven(null, new ItemStack(Items.MAGMA_CREAM), ItemStack.EMPTY, new FluidStack(FluidRegistry.WATER, 1000), null, new FluidStack(FluidRegistry.LAVA, 1000), null);
+		removeFromLabOvenBySolute(new ItemStack(Items.MAGMA_CREAM));
+		removeFromLabOvenBySolvent(new FluidStack(FluidRegistry.WATER, 1000));
+		removeFromLabOvenBySolution(new FluidStack(FluidRegistry.LAVA, 1000));
+		removeFromLabOvenByPrecipitate(new ItemStack(Items.NETHER_WART));
+
+	//LAB BLENDER
+		sendToLabBlender(Arrays.asList(new ItemStack(Items.REDSTONE, 4), new ItemStack(Items.GLOWSTONE_DUST, 6), new ItemStack(Items.GHAST_TEAR, 8)), new ItemStack(Items.NETHER_STAR, 2));
+		removeFromLabBlenderByOutput(new ItemStack(Items.NETHER_STAR));
+
+	//HEAT EXCHANGER
+		sendToHeatExchanger(new FluidStack(FluidRegistry.getFluid("compressed_air"), 1000), new FluidStack(FluidRegistry.getFluid("cooled_air"), 1000));
+		removeFromHeatExchangerByInput(new FluidStack(FluidRegistry.getFluid("compressed_air"), 1000));
+		removeFromHeatExchangerByOutput(new FluidStack(FluidRegistry.getFluid("cooled_air"), 1000));
+
+	//GAS REFORMER
+		sendToReformingReactor(new FluidStack(FluidRegistry.getFluid("nitrogen"), 1000), new FluidStack(FluidRegistry.getFluid("syngas"), 1000), new FluidStack(FluidRegistry.getFluid("ammonia"), 1000), new ItemStack(Blocks.IRON_BLOCK));
+		removeFromReformingReactorBySolvent(new FluidStack(FluidRegistry.getFluid("nitrogen"), 1000));
+		removeFromReformingReactorByReagent(new FluidStack(FluidRegistry.getFluid("syngas"), 1000));
+		removeFromReformingReactorByOutput(new FluidStack(FluidRegistry.getFluid("ammonia"), 1000));
+
+	//GAS PURIFIER
+		sendToGasPurifier(new FluidStack(FluidRegistry.getFluid("raw_syngas"), 1000), new FluidStack(FluidRegistry.getFluid("syngas"), 1000), new ItemStack(Items.GUNPOWDER), ItemStack.EMPTY);
+		removeFromGasPurifierByInput(new FluidStack(FluidRegistry.getFluid("nitrogen"), 1000));
+		removeFromGasPurifierByOutput(new FluidStack(FluidRegistry.getFluid("syngas"), 1000));
+
+	//GAS CONDENSER
+		sendToGasCondenser(new FluidStack(FluidRegistry.getFluid("oxygen"), 80), new FluidStack(FluidRegistry.getFluid("liquid_oxigen"), 1));
+
+	//GASIFICATION_PLANT
+		sendToGasificationPlant(new FluidStack(FluidRegistry.getFluid("coal_slurry"), 1000), new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.getFluid("raw_syngas"), 1000), new ItemStack(Items.GUNPOWDER), ItemStack.EMPTY, 800);
+		removeFromGasificationPlantBySolvent(new FluidStack(FluidRegistry.getFluid("coal_slurry"), 1000));
+		removeFromGasificationPlantByReagent(new FluidStack(FluidRegistry.WATER, 1000));
+		removeFromGasificationPlantByOutput(new FluidStack(FluidRegistry.getFluid("raw_syngas"), 1000));
+
+	//DEPOSITION CHAMBER
+		sendToDepositionChamber(new ItemStack(Items.SLIME_BALL), new ItemStack(Items.MAGMA_CREAM), new FluidStack(FluidRegistry.LAVA, 1000), 2000, 2000);
+		removeFromDepositionChamberByInput(new ItemStack(Items.SLIME_BALL));
+		removeFromDepositionChamberByOutput(new ItemStack(Items.MAGMA_CREAM));
+		removeFromDepositionChamberBySolvent(new FluidStack(FluidRegistry.getFluid("syngas"), 1000));
+
+	//CHEMICAL EXTRACTOR
+		sendToChemicalExtractor("Oxide", new ItemStack(Items.GOLD_INGOT), Arrays.asList("dustSilver", "dustGold"), Arrays.asList(70, 20));
+		removeFromChemicalExtractorByInput(new ItemStack(Items.GOLD_INGOT));
+		removeFromChemicalExtractorByOredict("dustGold");
+		inhibitFromChemicalExtractor("dustSilicon");
+
+	//TRANSPOSER
+		sendToTransposer(new FluidStack(FluidRegistry.getFluid("sulfuricacid"), 1000), new FluidStack(FluidRegistry.getFluid("sulfuric_acid"), 1000));
+		removeFromTransposerByInput(new FluidStack(FluidRegistry.getFluid("sulfuricacid"), 1000));
+		removeFromTransposerByOutput(new FluidStack(FluidRegistry.getFluid("sulfuric_acid"), 1000));
 
 
 
 /**
- * ROCKHOUNDING: CHEMISTRY   -   CHEMICAL EXTRACTOR
- * The Chemical Extractor produces element dusts from the inputted itemstack.
+ * ROCKHOUNDING: ORE TIERS
  */
 
-		/**
-		 * Adds a custom recipe to the Chemical Extractor.
-		 * The input includes an array with the elements composing the itemstack and an array with the percentage of each element
-		 * 
-		 * @param category : the category to which the input itemstack belongs
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of elements composing the itemstack
-		 * @param quantities : the list of percentage of each element added in the previous array
-		 */
-		sendToExtractor("Silicate", new ItemStack(Items.DYE, 1, 4), Arrays.asList("silicon", "aluminum", "sodium", "calcium", "sulfur"), Arrays.asList(17, 16, 14, 8, 6));
-
-		/**
-		 * @param elements : the list of elements inhibited from extraction
-		 */
-		inhibitFromExtractor(Arrays.asList("silicon", "aluminum"));
-
-
-
-/**
- * ROCKHOUNDING: CHEMISTRY   -   METAL ALLOYER
- * The Metal Alloyer produces alloyed ingots from mixing an array of dusts.
- */
-		/**
-		 * Adds a custom recipe to the Metal Alloyer.
-		 * The input is an array of 1 to 6 strings representing the oredict of the single dust and their quantity in the alloy.
-		 * The order is fixed, so an alloy can have the same ingredients. Just one difference in the arrays will make it unique.
-		 * 
-		 * @param displayName : the name of the alloy that will be shown in the machine selector
-		 * @param dusts: the array of the oredicted dusts in their desired order
-		 * @param quantities: the quantity of each element of the previous array
-		 * @param ingotStack: the outputted alloy result.
-		 * @param scrapStack: the randomized optinal waste resulting from the alloy. It can be null if not used
-		 */
-		sendToAlloyer("Gold", Arrays.asList("dustCopper", "dustIron"), Arrays.asList(5,4), new ItemStack(Items.GOLD_INGOT, 9), new ItemStack(Items.GOLD_NUGGET));
-
-		/**
-		 * Adds a custom recipe to the Metal Alloyer.
-		 * The input is an array of 1 to 6 strings representing the oredict of the single dust and their quantity in the alloy.
-		 * The order is fixed, so an alloy can have the same ingredients. Just one difference in the arrays will make it unique.
-		 * 
-		 * @param displayName : the name of the alloy that will be shown in the machine selector
-		 * @param dusts: the array of the oredicted dusts in their desired order
-		 * @param quantities: the quantity of each element of the previous array
-		 * @param ingotStack: the outputted alloy result.
-		 */
-		sendToAlloyer("Gold", Arrays.asList("dustCopper", "dustIron"), Arrays.asList(5,4), new ItemStack(Items.GOLD_INGOT, 9));
-
-		/**
-		 * Removes a recipe from the Metal Alloyer.
-		 * 
-		 * @param ingotStack : the outputted alloy result.
-		 */
-		removeFromAlloyer(new ItemStack(Items.GOLD_INGOT));
-
-
-
-/**
- * ROCKHOUNDING: CHEMISTRY   -   SEASONING RACK
- * The Seasoning Rack is a processing machine, returning an itemstack from another at the input.
- * By default the machine has an additional hardcoded salt processing for internal uses in the Rockhounding mod.
- */
-
-		/**
-		 * Adds a custom recipe to the Seasoning Rack.
-		 * 
-		 * @param inputStack : the itemstack being processed
-		 * @param outputStack : the resulting itemstack
-		 */
-		sendToSeasoner(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Items.LEATHER));
-
-		/**
-		 * Removes a recipe from the Seasoning Rack.
-		 * 
-		 * @param inputStack : the itemstack being processed
-		 */
-		removeFromSeasoner(new ItemStack(Items.ROTTEN_FLESH));
-
-
-
-/**
- * ROCKHOUNDING: CHEMISTRY   -   MINERAL SIZER
- * The Mineral Sizer is meant to be a crusher to obtain a crushed product from an input object.
- * By default the machine has an additional hardcoded function for internal uses in the Rockhounding mod.
- */
-
-		/**
-		 * Adds a custom recipe to the Mineral Sizer using the sizing chance.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of elements extractible from the the input itemstack
-		 * @param values : the list of probability of each element to be extracted or the comminution
-		 * @param hasComminution : determine if the sizing method will be randomized (false) or by comminution (true)
-		 */
-		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(20, 15, 15, 10, 20, 20), false);
-
-		/**
-		 * Adds a custom recipe to the Mineral Sizer using the comminutions.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param elements : the list of outputs
-		 * @param values : the list of probability of each element to be extracted or the comminution
-		 * @param hasComminution : determine if the sizing method will be randomized (false) or by comminution (true)
-		 */
-		sendToSizer(new ItemStack(Blocks.HARDENED_CLAY), Arrays.asList(new ItemStack(Items.DYE, 1, 0), new ItemStack(Items.DYE, 1, 1), new ItemStack(Items.DYE, 1, 2), new ItemStack(Items.DYE, 1, 3), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.DYE, 1, 5)), Arrays.asList(1, 3, 3, 4, 7, 10), true);
-
-		/**
-		 * Adds a custom recipe to the Mineral Sizer.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param outputStack : the output itemstack
-		 */
-		sendToSizer(new ItemStack(Blocks.SAND), new ItemStack(Items.DYE, 1, 9));
-
-		/**
-		 * Removes a recipe from the Mineral Sizer.
-		 * 
-		 * @param inputStack : the object being crushed
-		 */
-		removeFromSizer(new ItemStack(Blocks.STONE, 1, 1));
-
-
-
-/**
- * ROCKHOUNDING: CHEMISTRY   -   LAB OVEN
- * The Lab Oven produces fluids by the combination of an itemstack and one or two fluids
- */
-
-		/**
-		 * Adds a custom fluid recipe to the Lab Oven.
-		 * 
-		 * @param soluteStack : the input itemstack representing the solid ingredient 
-		 * @param isCatalyst : if the solute will be treated as a catalyst
-		 * @param solventA : the main fluid solvent. This must be always used
-		 * @param solventB : the secondary fluid solvet. It can be null if not used
-		 * @param outputFluid : the output fluid
-		 */
-		sendToOven(new ItemStack(Items.CLAY_BALL), false, new FluidStack(FluidRegistry.getFluid("chloromethane"), 500), null, new FluidStack(FluidRegistry.getFluid("silicone"), 500));
-
-		/**
-		 * Adds a custom fluid recipe to the Lab Oven.
-		 * 
-		 * @param soluteStack : the input itemstack representing the solid ingredient 
-		 * @param isCatalyst : if the solute will be treated as a catalyst
-		 * @param solvent : the fluid solvent.
-		 * @param outputFluid : the output fluid
-		 */
-		sendToOven(new ItemStack(Items.CLAY_BALL), false, new FluidStack(FluidRegistry.getFluid("chloromethane"), 500), new FluidStack(FluidRegistry.getFluid("silicone"), 500));
-		
-		/**
-		 * Removes a fluid recipe from the Lab Oven.
-		 * 
-		 * @param outputFluid : the output fluid to remove. Amount will be ignored
-		 */
-		removeFromOven(new FluidStack(FluidRegistry.getFluid("syngas"), 1000));
-
-
-
-/**
- * ROCKHOUNDING: CHEMISTRY   -   DEPOSITION CHAMBER
- * The Deposition Chamber enriches an element into another compound
- */
-
-		/**
-		 * Adds a custom recipe to the Deposition Chamber.
-		 * Max fluid amount can be 10000mB. Temperature can be any integer up to 3000, pressure can be any integer up to 32000.
-		 * 
-		 * @param inputStack : the input itemstack
-		 * @param outputStack : the output itemstack
-		 * @param solvent : the fluid solvent. The amount will count for the recipe
-		 * @param temperature : the working temperature
-		 * @param pressure : the wotking pressure
-		 */
-		sendToDeposition(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHERBRICK), new FluidStack(FluidRegistry.getFluid("sulfuric_acid"), 5000), 1000, 24000);
-	
-		/**
-		 * Removes a recipe from the Deposition Chamber.
-		 * 
-		 * @param outputStack : the outputted result.
-		 */
-		removeFromDeposition(new ItemStack(Items.NETHERBRICK));
-	
-		
-	
-/**
- * ROCKHOUNDING: CHEMISTRY   -   CASTING BENCH
- * The Casting bench produces several metal furnitures for the mod
- */
-
-		/**
-		 * Adds a custom recipe to the Casting bench.
-		 * Left-click to scroll the available patterns, right-click to add/remove the recipe items 
-		 * 
-		 * @param input : the OreDictionary String related to the input material
-		 * @param outputStack : the output itemstack. The stacksize is considered too
-		 * @param pattern : the numeric code of the required pattern. 0-Coils, 1-Rods, 2-Foils, 3-Arm, 4-Casing, 5-Customized
-		 */
-		sendToCasting("blockGold", new ItemStack(Items.GOLD_INGOT, 9), 5);
-	
-		/**
-		 * Removes a recipe from the Casting bench.
-		 * 
-		 * @param outputStack : the output itemstack.
-		 */
-		removeFromCasting(new ItemStack(Items.GOLD_INGOT));
-	
-		
-	
-/**
- * ROCKHOUNDING: CHEMISTRY   -   LAB BLENDER
- * The Lab Blender refines solid composts used by the mod
- */
-	
-		/**
-		 * Adds a custom recipe to the Lab Blender via oredict.
-		 * 
-		 * @param oredict : the list of oredicted ingredients
-		 * @param quantity : the amount of each ingredient required
-		 * @param outputStack : the output itemstack. The stacksize is considered too
-		 */
-		sendToBlender(Arrays.asList("dustCoal"), Arrays.asList(9), new ItemStack(Items.COAL, 2));
-	
-		/**
-		 * Adds a custom recipe to the Lab Blender via itemstack.
-		 * 
-		 * @param inputStack : the list of ingredient itemstacks
-		 * @param outputStack : the output itemstack. The stacksize is considered too
-		 */
-		sendToBlender(Arrays.asList(new ItemStack(Items.SLIME_BALL, 4), new ItemStack(Items.SLIME_BALL, 5)), new ItemStack(Items.MAGMA_CREAM, 2));
-	
-		/**
-		 * Removes a recipe from the Lab Blender.
-		 * 
-		 * @param outputStack : the output itemstack
-		 */
-		removeFromBlender(new ItemStack(Items.GOLD_INGOT));
-	
-
-
-/**
- * ROCKHOUNDING: SURFACE   -   WOOD INCUBATOR
- * The Wood Incubator transforms an object into another by the effect of a solid and a fluid ingredient.
- */
-		/**
-		 * Adds a custom recipe to the Wood Incubator.
-		 * 
-		 * @param inputStack : the object to be transformed
-		 * @param soluteStack : the solid ingredient
-		 * @param canSoluteOredict : if the solute can include oredicted equivalents
-		 * @param solventStack : the fluid ingredient
-		 * @param outputStack : the final object
-		 */
-		sendToIncubator(new ItemStack(Items.SLIME_BALL), new ItemStack(Items.ROTTEN_FLESH), false, new FluidStack(FluidRegistry.WATER, 500), new ItemStack(Blocks.SLIME_BLOCK));
-
-		/**
-		 * Removes a recipe from the Wood Incubator.
-		 * 
-		 * @param outputStack : the final object
-		 */
-		removeFromIncubator(new ItemStack(Blocks.SLIME_BLOCK));
-
-
-
-/**
- * ROCKHOUNDING: SURFACE   -   COMPOST BIN
- * The Compost Bin produces a compost item used for the Rockhounding mod purposes.
- */
-
-		/**
-		 * Adds a custom recipe to the Compost Bin.
-		 * 
-		 * @param inputStack : the object being composted
-		 * @param canInputOredict : if the input can include oredicted equivalents
-		 */
-		sendToCompost(new ItemStack(Blocks.BONE_BLOCK), true);
-
-		/**
-		 * Removes a recipe from the Compost Bin.
-		 * 
-		 * @param inputStack : object no longer allowed to be processed
-		 */
-		removeFromCompost(new ItemStack(Blocks.MELON_BLOCK));
-
-
-
-/**
- * ROCKHOUNDING: ORE TIERS   -   BLOOMERY
- * The Bloomery can separately melt an ore into its molten form and then cast the fluid into an ingot.
- */
-
-		/**
-		 * Adds a custom recipe to the Bloomery.
-		 * 
-		 * @param inputStack : ore to be smelted
-		 * @param moltenStack : the fluid obtained melting the ore
-		 * @param outputStack : the item obtained casting the fluid
-		 */
+	//BLOOMERY
 		sendToBloomery(new ItemStack(Blocks.MAGMA), new FluidStack(FluidRegistry.LAVA, 250), new ItemStack(Items.MAGMA_CREAM));
+		removeFromBloomeryByInput(new ItemStack(Blocks.IRON_ORE));
+		removeFromBloomeryByBloom(new FluidStack(FluidRegistry.LAVA, 1000));
+		removeFromBloomeryByOutput(new ItemStack(Items.MAGMA_CREAM));
 
-		/**
-		 * Removes a custom recipe to the Bloomery.
-		 * 
-		 * @param inputStack : ore to be smelted
-		 */
-		removeFromBloomery(new ItemStack(Blocks.IRON_ORE));
+	//COAL REFINER
+		sendToCoalRefiner(new ItemStack(Items.COAL, 1, 1), true, new ItemStack(Items.COAL), 2000);
+		removeFromCoalRefinerByInput(new ItemStack(Items.COAL, 1, 1));
+		removeFromCoalRefinerByOutput(new ItemStack(Items.COAL));
 
-
-
-/**
- * ROCKHOUNDING: ORE TIERS   -   BASIC COAL REFINERY
- * The Basic coal refinery allows to improve coals used by the mod into better coals.
- */
-
-		/**
-		 * Adds a custom recipe to the refinery.
-		 * 
-		 * @param inputStack : coal to be improved
-		 * @param outputStack : improved coal
-		 */
-		sendToRefinery(new ItemStack(Items.COAL, 1, 1), new ItemStack(Items.COAL));
-
-		/**
-		 * Removes a custom recipe to the refinery.
-		 * 
-		 * @param inputStack : coal to be improved
-		 */
-		removeFromRefinery(new ItemStack(Items.COAL));
+	//DRYING PALLET
+		sendToDryingPallet(new ItemStack(Items.ROTTEN_FLESH), true, new ItemStack(Items.LEATHER), 2000);
+		removeFromDryingPalletByInput(new ItemStack(Items.ROTTEN_FLESH));
+		removeFromDryingPalletByOutput(new ItemStack(Items.LEATHER));
 
 
 
 /**
- * ROCKHOUNDING: ORE TIERS   -   PEAT DRYING PALLET
- * The Peat drying pallet allows to dry moist peat chunks into the proper coal.
+ * ROCKHOUNDING: ROCKS
  */
 
-		/**
-		 * Adds a custom recipe to the refinery.
-		 * 
-		 * @param inputStack : item to be improved
-		 * @param outputStack : improved item
-		 */
-		sendToPallet(new ItemStack(Items.COAL, 1, 1), new ItemStack(Items.COAL));
+	//ROCK VENDOR
+		sendToRockVendor(new ItemStack(Items.NETHER_STAR), 64);
+		removeFromRockVendor(new ItemStack(Items.GOLD_INGOT));
 
-		/**
-		 * Removes a custom recipe to the refinery.
-		 * 
-		 * @param inputStack : item to be improved
-		 */
-		removeFromPallet(new ItemStack(Items.COAL));
+	//CUTTING STATION
+		sendToCuttingStation(new ItemStack(Blocks.STONE, 1, 1), 2, new ItemStack(Blocks.STONE, 1, 2));
+
+	//STONE RAMMER
+		sendToStoneRammer(new ItemStack(Blocks.STONE, 1, 1), new ItemStack(Blocks.STONE, 1, 2));
+
+	//CARVING TABLE
+		sendToCarvingTable(new ItemStack(Blocks.STONE), 3, new ItemStack(Blocks.STONEBRICK));
+
+	//SCULPTING TABLE
+		sendToSculptingTable(new ItemStack(Blocks.QUARTZ_BLOCK), 1, new ItemStack(Blocks.QUARTZ_BLOCK, 1, 1));
 
 
 
 /**
- * ROCKHOUNDING: ROCKS   -   ROCKS VENDING SYSTEM
- * The Rocks Vending Systems allows to purchase the rocks provided by the mod
+ * ROCKHOUNDING: SURFACE
  */
 
-		/**
-		 * Adds a custom fee item to the Rocks Vending System
-		 * 
-		 * @param inputStack : the itemstack allowed to be used as currency
-		 * @param canInputOredict : if the iput can include oredicted equivalents
-		 * @param outputStacksize : how many rocks can be purchased with one item
-		 */
-		sendToVendor(new ItemStack(Items.NETHER_STAR), false, 64);
+	//COMPOST BIN
+		sendToCompostBin(new ItemStack(Blocks.BONE_BLOCK), -1, 25);
+		removeFromCompostBin(new ItemStack(Blocks.MELON_BLOCK));
 
-		/**
-		 * Removes an itemstack the list of allowed currency
-		 * 
-		 * @param inputStack : the itemstack to remove from the list of allowed currency
-		 */
-		removeFromVendor(new ItemStack(Items.GOLD_INGOT));
+	//WOOD INCUBATOR
+		sendToWoodIncubator(new ItemStack(Items.SLIME_BALL), new ItemStack(Items.ROTTEN_FLESH), new FluidStack(FluidRegistry.WATER, 500), new ItemStack(Blocks.SLIME_BLOCK));
 
-
-
-/**
- * ROCKHOUNDING: ROCKS   -   CUTTING STATION
- * The Cutting Station allows to cut and carve the rocks provided by the mod
- */
-
-		/**
-		 * Adds a custom recipe to the Cutting Station
-		 * 
-		 * @param inputStack : the block that will be cut
-		 * @param cutCode : The code of the cut being performed (see gui switches). Zero if no code matches
-		 * @param outputStacksize : the resulting cut block
-		 */
-		sendToCutting(new ItemStack(Blocks.STONE, 1, 1), 2, new ItemStack(Blocks.STONE, 1, 2));
+	//VIVARIUM
+		sendToVivarium(new ItemStack(Blocks.WATERLILY), new ItemStack(Items.FISH), 2000, 20);
 
 	}
-
 }

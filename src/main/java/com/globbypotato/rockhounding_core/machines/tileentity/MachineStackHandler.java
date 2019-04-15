@@ -1,17 +1,26 @@
 package com.globbypotato.rockhounding_core.machines.tileentity;
 
+import java.util.Random;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class MachineStackHandler extends ItemStackHandler{
-
-	TileEntityMachineInv tile;
-	public MachineStackHandler(int slots,TileEntityMachineInv tile) {
+	Random rand = new Random();
+	
+	TileEntityInv tile;
+	public MachineStackHandler(int slots,TileEntityInv tile) {
 		super(slots);
 		this.tile = tile;
 	}
+
+/*
+ * ------------------------------------------------------
+ * 						ITEMSTACKS
+ * ------------------------------------------------------
+ */
 
 	/**
 	 * Check if can insert the new stack in the slot or add an amount to the existing one 
@@ -21,7 +30,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canSetOrStack(ItemStack stackInSlot, ItemStack recipeOutput) {
-		return stackInSlot == null || canStack(stackInSlot, recipeOutput);
+		return stackInSlot.isEmpty() || canStack(stackInSlot, recipeOutput);
 	}
 
 	/**
@@ -32,7 +41,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canStack(ItemStack stackInSlot, ItemStack recipeOutput) {
-		return stackInSlot != null && stackInSlot.isItemEqual(recipeOutput) && stackInSlot.stackSize <= stackInSlot.getMaxStackSize() - recipeOutput.stackSize;
+		return !stackInSlot.isEmpty() && stackInSlot.isItemEqual(recipeOutput) && stackInSlot.getCount() <= stackInSlot.getMaxStackSize() - recipeOutput.getCount();
 	}
 
 	/**
@@ -42,10 +51,10 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @param stackToSet
 	 */
 	public void setOrStack(int slot, ItemStack stackToSet){
-		if(this.getStackInSlot(slot) == null){
+		if(this.getStackInSlot(slot).isEmpty()){
 			this.setStackInSlot(slot, stackToSet);
 		}else{
-			for(int x = 0; x < stackToSet.stackSize; x++){
+			for(int x = 0; x < stackToSet.getCount(); x++){
 				incrementSlot(slot);
 			}
 		}
@@ -58,7 +67,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canIncrementSlot(ItemStack stack) {
-		return stack != null && stack.stackSize < stack.getMaxStackSize();
+		return !stack.isEmpty() && stack.getCount() < stack.getMaxStackSize();
 	}
 
 	/**
@@ -68,8 +77,8 @@ public class MachineStackHandler extends ItemStackHandler{
 	 */
 	public void incrementSlot(int slot){
 		ItemStack temp = this.getStackInSlot(slot);
-		if(temp.stackSize + 1 <= temp.getMaxStackSize()){
-			temp.stackSize++;
+		if(temp.getCount()+1 <= temp.getMaxStackSize()){
+			temp.grow(1);
 		}
 		this.setStackInSlot(slot, temp);
 	}
@@ -82,8 +91,8 @@ public class MachineStackHandler extends ItemStackHandler{
 	 */
 	public void incrementSlotBy(int slot, int num){
 		ItemStack temp = this.getStackInSlot(slot);
-		int adding = Math.min(temp.getMaxStackSize() - temp.stackSize, num);
-		temp.stackSize += adding;
+		int adding = Math.min(temp.getMaxStackSize() - temp.getCount(), num);
+		temp.grow(adding);
 		this.setStackInSlot(slot, temp);
 	}
 
@@ -94,7 +103,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @param stackToSet
 	 */
 	public void setOrIncrement(int slot, ItemStack stackToSet){
-		if(this.getStackInSlot(slot) == null){
+		if(this.getStackInSlot(slot).isEmpty()){
 			this.setStackInSlot(slot, stackToSet);
 		}else{
 			incrementSlot(slot);
@@ -108,26 +117,26 @@ public class MachineStackHandler extends ItemStackHandler{
 	 */
 	public void decrementSlot(int slot){
 		ItemStack temp = this.getStackInSlot(slot);
-		temp.stackSize--;
-		if(temp.stackSize <= 0){
-			this.setStackInSlot(slot, null);
+		temp.shrink(1);
+		if(temp.getCount() <= 0){
+			this.setStackInSlot(slot, ItemStack.EMPTY);
 		}else{
 			this.setStackInSlot(slot, temp);
 		}
 	}
 
 	/**
-	 * Decrease the stack in slot by an amount
+	 * Decrease the stack in slot by a specific amount
 	 * 
 	 * @param slot
 	 * @param num
 	 */
 	public void decrementSlotBy(int slot, int num){
 		ItemStack temp = this.getStackInSlot(slot);
-		int taking = Math.min(temp.stackSize, num);
-		temp.stackSize -= taking;
-		if(temp.stackSize <= 0){
-			this.setStackInSlot(slot, null);
+		int taking = Math.min(temp.getCount(), num);
+		temp.shrink(taking);
+		if(temp.getCount() <= 0){
+			this.setStackInSlot(slot, ItemStack.EMPTY);
 		}else{
 			this.setStackInSlot(slot, temp);
 		}
@@ -139,86 +148,195 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @param slot
 	 */
 	public void damageSlot(int slot) {
-		if(this.getStackInSlot(slot) != null){
+		if(!this.getStackInSlot(slot).isEmpty()){
 			int damage = this.getStackInSlot(slot).getItemDamage() + 1;
 			this.getStackInSlot(slot).setItemDamage(damage);
 			if(damage >= this.getStackInSlot(slot).getMaxDamage()){
-				this.getStackInSlot(slot).stackSize--;
+				this.getStackInSlot(slot).shrink(1);
 			}
-			if(this.getStackInSlot(slot).stackSize <= 0){
-				this.setStackInSlot(slot, null);
+			if(this.getStackInSlot(slot).getCount() <= 0){
+				this.setStackInSlot(slot, ItemStack.EMPTY);
 			}
 		}
 	}
 
 	/**
-	 * Damage the stack in the slot with a step
-	 * 
-	 * @param slot
-	 * @param step
-	 */
-	public void damageSlot(int slot, int step) {
-		if(this.getStackInSlot(slot) != null){
-			int damage = this.getStackInSlot(slot).getItemDamage() + step;
-			this.getStackInSlot(slot).setItemDamage(damage);
-			if(damage >= this.getStackInSlot(slot).getMaxDamage()){
-				this.getStackInSlot(slot).stackSize--;
+	  * Damage the stack in the slot by a specific amount
+	  * 
+	  * @param slot
+	  * @param step
+	  */
+	 public void damageSlot(int slot, int step) {
+	 	if(this.getStackInSlot(slot) != ItemStack.EMPTY){
+	 		int damage = this.getStackInSlot(slot).getItemDamage() + step;
+	 		this.getStackInSlot(slot).setItemDamage(damage);
+	 		if(damage >= this.getStackInSlot(slot).getMaxDamage()){
+	 			this.getStackInSlot(slot).shrink(1);
+	 		}
+	 		if(this.getStackInSlot(slot).getCount() <= 0){
+	 			this.setStackInSlot(slot, ItemStack.EMPTY);
+	 		}
+	 	}
+	 }
+
+
+
+	 /**
+	  * attempt to damage a slot with UNBREAKING enchantment
+	  * 
+	  * @param level
+	  * @param slot
+	  */
+	 public void damageUnbreakingSlot(int level, int slot){
+		if(level > 0){
+			if(this.rand.nextInt(level + 1) == 0){
+				damageSlot(slot);
 			}
-			if(this.getStackInSlot(slot).stackSize <= 0){
-				this.setStackInSlot(slot, null);
-			}
+		}else{
+			damageSlot(slot);
 		}
-	}
+	 }
+
+
+/*
+ * ------------------------------------------------------
+ * 						FLUIDS
+ * ------------------------------------------------------
+ */
 
 	/**
 	 * Check if can insert a new fluid or fill the existing one
 	 * 
 	 * @param tank
 	 * @param tankFluid
-	 * @param recipeFluid
+	 * @param insertingFluid
 	 * @return
 	 */
-	public boolean canSetOrFill(FluidTank tank, FluidStack tankFluid, FluidStack recipeFluid) {
-		return recipeFluid != null && (tankFluid == null || canFillTank(tank, tankFluid, recipeFluid));
+	public boolean canSetOrFillFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid) {
+		return insertingFluid != null && (tankFluid == null || canFillFluid(tank, tankFluid, insertingFluid));
 	}
 
 	/**
-	 * Check if can add the specific amount to the existing fluid
+	 * Check if can add the specific amount to the existing fluid with a specific amount
 	 * 
 	 * @param tank
 	 * @param tankFluid
-	 * @param recipeFluid
+	 * @param insertingFluid
 	 * @return
 	 */
-	public boolean canFillTank(FluidTank tank, FluidStack tankFluid, FluidStack recipeFluid){
-		return tankFluid != null && tankFluid.isFluidEqual(recipeFluid) && tankFluid.amount <= tank.getCapacity() - recipeFluid.amount;
+	public boolean canFillFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid){
+		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount <= tank.getCapacity() - insertingFluid.amount;
 	}
 
 	/**
-	 * Check if there is enough fluid amount than requested
+	 * Check if can insert a new fluid or fill the existing one with a specific amount
+	 * 
+	 * @param tank
+	 * @param tankFluid
+	 * @param insertingFluid
+	 * @param amount
+	 * @return
+	 */
+	public boolean canSetOrAddFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid, int amount) {
+		return insertingFluid != null && (tankFluid == null || canAddFluid(tank, tankFluid, insertingFluid, amount));
+	}
+
+	/**
+	 * Check if can add the specific amount to the existing fluid with a specific amount
+	 * 
+	 * @param tank
+	 * @param tankFluid
+	 * @param insertingFluid
+	 * @param amount 
+	 * @return
+	 */
+	public boolean canAddFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid, int amount){
+		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount <= tank.getCapacity() - amount;
+	}
+
+	/**
+	 * Check if is possible to drain the requested fluid from the stored one
 	 * 
 	 * @param tankFluid
-	 * @param recipeFluid
+	 * @param requestedFluid
 	 * @return
 	 */
-	public boolean hasEnoughFluid(FluidStack tankFluid, FluidStack recipeFluid){
-		return tankFluid != null && recipeFluid != null
-			&& tankFluid.isFluidEqual(recipeFluid) 
-			&& tankFluid.amount >= recipeFluid.amount;
+	public boolean canDrainFluid(FluidStack tankFluid, FluidStack requestedFluid){
+		return tankFluid != null && requestedFluid != null && tankFluid.isFluidEqual(requestedFluid) && tankFluid.amount >= requestedFluid.amount;
 	}
 
 	/**
-	 * Remove a specific fluid amount and/or clean the tank
+	 * Check if is possible to drain the requested fluid from the stored one with specific amount, ignoring fluidAmount()
+	 * 
+	 * @param tankFluid
+	 * @param requestedFluid
+	 * @return
+	 */
+	public boolean canDrainFluid(FluidStack tankFluid, FluidStack requestedFluid, int amount){
+		return tankFluid != null && requestedFluid != null && tankFluid.isFluidEqual(requestedFluid) && tankFluid.amount >= amount;
+	}
+
+	/**
+	 * Remove a specific fluid amount. Can clean the tank or leave the fluid reservation
 	 * 
 	 * @param tank
 	 * @param amount
 	 * @param doClean
 	 */
-	public void drainOrClean(FluidTank tank, int amount, boolean doClean){
+	public void drainOrCleanFluid(FluidTank tank, int amount, boolean doClean){
 		tank.getFluid().amount -= amount;
 		if (doClean && tank.getFluidAmount() <= 0) {
 			tank.setFluid(null);
 		}
 	}
 
+	/**
+	 * Check if a tank has any fluid inside
+	 * 
+	 * @param tank
+	 * @return
+	 */
+	public boolean tankHasFluid(FluidTank tank) {
+		return tank.getFluid() != null && tank.getFluidAmount() > 0;
+	}
+
+	/**
+	 * Check if a tank has at least a need amount of any fluid
+	 * 
+	 * @param tank
+	 * @param amount
+	 * @return
+	 */
+	public boolean tankHasFluid(FluidTank tank, int amount) {
+		return tank.getFluid() != null && tank.getFluidAmount() >= amount;
+	}
+	
+	/**
+	 * if canSetOrFillFluid, do the task
+	 * 
+	 * @param tank
+	 * @param insertingFluid
+	 */
+	public void setOrFillFluid(FluidTank tank, FluidStack insertingFluid){
+		if(tank.getFluid() != null){
+			tank.getFluid().amount += insertingFluid.amount;
+		}else{
+			tank.setFluid(insertingFluid);
+		}
+	}
+
+	/**
+	 * if canSetOrFillFluid, do the task with specific amount
+	 * 
+	 * @param tank
+	 * @param insertingFluid
+	 * @param amount
+	 */
+	public void setOrFillFluid(FluidTank tank, FluidStack insertingFluid, int amount){
+		if(tank.getFluid() != null){
+			tank.getFluid().amount += amount;
+		}else{
+			tank.setFluid(new FluidStack(insertingFluid.getFluid(), amount));
+		}
+	}
 }

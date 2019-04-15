@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "rockhounding_core:utilities",
+	"pattern": [
+		" N ",
+		" IN",
+		"S  "
+	],
+	"key": {
+		"S":{
+				"ore": "stickWood",		
+				"type": "forge:ore_dict"		
+			},
+		"I":{
+				"ore": "ingotIron",
+				"type": "forge:ore_dict"
+			},
+		"N":{
+				"ore": "nuggetIron",
+				"type": "forge:ore_dict"
+			}
+	},
+	"result":{
+				"item": "rockhounding_core:mod_wrench"			
+			}
+}

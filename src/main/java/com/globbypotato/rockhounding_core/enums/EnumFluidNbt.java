@@ -11,9 +11,19 @@ public enum EnumFluidNbt implements IStringSerializable {
 	CYAN("Cyan"),
 	SOLVENT("Solvent"),
 	REAGENT("Reagent"),
+	SOLUTION("Solution"),
+	BYPRODUCT("Byproduct"),
+	BATH("Bath"),
 	ACID("Acid"),
+	FLUID("Fluid"),
 	LAVA("Lava"),
-	WATER("Water");
+	WATER("Water"),
+	GAS("Gas"),
+	COMBUSTIBLE("Combustible"),
+	FLUID_IN("FluidIn"),
+	FLUID_OUT("FluidOut"),
+	GAS_IN("GasIn"),
+	GAS_OUT("GasOut");
 
 	private String nameTag;
 	private EnumFluidNbt(String nameTag) {

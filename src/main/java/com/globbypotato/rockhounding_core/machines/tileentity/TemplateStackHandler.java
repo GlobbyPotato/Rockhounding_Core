@@ -16,6 +16,6 @@ public class TemplateStackHandler extends ItemStackHandler{
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 }

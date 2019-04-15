@@ -1,16 +1,14 @@
 package com.globbypotato.rockhounding_core.items;
 
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class BaseArray extends BaseItem {
-	private String[] itemArray;
+	public String[] itemArray;
 
-	public BaseArray(String name, String[] array) {
-		super(name);
+	public BaseArray(String modid, String name, String[] array) {
+		super(modid, name);
 		setHasSubtypes(true);
 		this.itemArray = array;
 	}
@@ -22,10 +20,13 @@ public class BaseArray extends BaseItem {
 		return super.getUnlocalizedName() + "." + this.itemArray[i];
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems){
-		for(int i = 0; i < this.itemArray.length; i++){subItems.add(new ItemStack(itemIn, 1, i));}
-	}
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
+        if (this.isInCreativeTab(tab)){
+	        for (int i = 0; i < this.itemArray.length; ++i){
+	            items.add(new ItemStack(this, 1, i));
+	        }
+        }
+    }
 
 }

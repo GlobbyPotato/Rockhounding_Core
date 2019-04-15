@@ -3,12 +3,13 @@ package com.globbypotato.rockhounding_core.blocks.itemblocks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public class BaseMetaIB extends BaseItemBlock {
+public class BaseMetaIB extends BaseIB {
 	private String[] enumNames;
 
 	public BaseMetaIB(Block block, String[] names) {
         super(block);
         this.enumNames = names;
+        this.setHasSubtypes(true);
 	}
 
     @Override

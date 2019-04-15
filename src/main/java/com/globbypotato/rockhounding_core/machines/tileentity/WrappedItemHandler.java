@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 /*
- * With permission from WillieWillus, originally from ProjectE 
+ * Injected by al132. With permission from WillieWillus, originally from ProjectE 
  * https://github.com/sinkillerj/ProjectE/blob/MC1.10.x/src/main/java/moze_intel/projecte/gameObjs/tiles/WrappedItemHandler.java
  */
 public class WrappedItemHandler implements IItemHandlerModifiable{
@@ -38,7 +38,7 @@ public class WrappedItemHandler implements IItemHandlerModifiable{
     public ItemStack extractItem(int slot, int amount, boolean simulate){
         if (this.mode == WriteMode.OUT || this.mode == WriteMode.IN_OUT)
             return this.compose.extractItem(slot, amount, simulate);
-		return null;
+		return ItemStack.EMPTY;
     }
 
     @Override
@@ -52,4 +52,9 @@ public class WrappedItemHandler implements IItemHandlerModifiable{
         IN_OUT,
         NONE
     }
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 64;
+	}
 }

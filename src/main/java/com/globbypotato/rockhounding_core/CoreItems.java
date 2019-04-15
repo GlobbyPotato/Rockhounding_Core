@@ -1,37 +1,64 @@
 package com.globbypotato.rockhounding_core;
 
 import com.globbypotato.rockhounding_core.handlers.Reference;
+import com.globbypotato.rockhounding_core.handlers.RegistryHandler;
 import com.globbypotato.rockhounding_core.items.FuelBlend;
-import com.globbypotato.rockhounding_core.items.Inductor;
+import com.globbypotato.rockhounding_core.items.io.UtilIO;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.registries.IForgeRegistry;
 
+@ObjectHolder(Reference.MODID)
 public class CoreItems {
 
-	public static Item heat_inductor;
-	public static Item fuel_blend;
+	// initialize the item
+	public static Item HEAT_INDUCTOR;
+	public static Item GAS_TURBINE;
+	public static Item FUEL_BLEND;
+	public static Item MOD_WRENCH;
 
-	public static void init(){
-		heat_inductor = new Inductor("heat_inductor").setCreativeTab(Reference.RockhoundingCore);
-		fuel_blend = new FuelBlend("fuel_blend");
+	@Mod.EventBusSubscriber(modid = Reference.MODID)
+	public static class RegistrationHandler {
+
+		// initialize the item
+		public static void initItems(){
+			HEAT_INDUCTOR = new UtilIO("heat_inductor");
+			GAS_TURBINE = new UtilIO("gas_turbine");
+			FUEL_BLEND = new FuelBlend("fuel_blend");
+			MOD_WRENCH = new UtilIO("mod_wrench");
+		}
+
+		// register the item
+		@SubscribeEvent
+		public static void registerItems(final RegistryEvent.Register<Item> event) {
+			initItems();
+
+			final IForgeRegistry<Item> registry = event.getRegistry();
+			registry.register(HEAT_INDUCTOR);
+			registry.register(GAS_TURBINE);
+			registry.register(FUEL_BLEND);
+			registry.register(MOD_WRENCH);
+		}
+
+		// register the model
+		/**
+		 * 
+		 * @param event
+		 */
+		@SubscribeEvent
+		public static void registerModels(ModelRegistryEvent event){
+			RegistryHandler.registerSingleModel(HEAT_INDUCTOR);
+			RegistryHandler.registerSingleModel(GAS_TURBINE);
+			RegistryHandler.registerSingleModel(FUEL_BLEND);
+			RegistryHandler.registerSingleModel(MOD_WRENCH);
+		}
+
 	}
 
-	public static void initClient(){
-		//items
-		registerSimpleItemRender(heat_inductor, 0, "heat_inductor");
-		registerSimpleItemRender(fuel_blend, 0, "fuel_blend");
-	}
 
-	//render meta item
-	public static void registerMetaItemRender(Item item, int meta, String fileName){
-		ModelResourceLocation model = new ModelResourceLocation(item.getRegistryName() + "_" + fileName, "inventory");
-		ModelLoader.setCustomModelResourceLocation(item, meta, model );
-	}
-	//render simple item
-	public static void registerSimpleItemRender(Item item, int meta, String fileName){
-		ModelResourceLocation model = new ModelResourceLocation(item.getRegistryName(), "inventory");
-		ModelLoader.setCustomModelResourceLocation(item, meta, model );
-	}
 }

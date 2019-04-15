@@ -49,6 +49,6 @@ public class ProbabilityStack {
 			trackingProb += stack.getProbability();
 			if(trackingProb >= rando) return stack.getStack();
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 }
