@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -110,7 +111,11 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 
 	//---------- CUSTOM ----------
 	public boolean isActive(){
-		return this.activation || isPowered();
+		int power = this.world.getRedstonePower(poweredPosition(), poweredFacing());
+		if(isComparatorSensible() && power > 0 && this.activation){
+			this.activation = false;
+		}
+		return this.activation || (isComparatorSensible() && power > 0);
 	}
 
 	public int getCooktime(){
@@ -144,12 +149,24 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 		return this.recipeIndex;
 	}
 
-	public boolean isPowered(){
-		return this.world.isBlockPowered(this.pos);
+
+
+	//---------- REDSTONE SIGNAL ----------
+	public boolean isComparatorSensible(){
+		return true;
 	}
 
-	public int getBlockPower(){
-		return isPowered() ? this.world.isBlockIndirectlyGettingPowered(this.pos) : 0;
+	public EnumFacing poweredFacing(){
+		return getFacing();
+	}
+
+	public BlockPos poweredPosition(){
+		return this.pos.offset(poweredFacing());
+	}
+
+	public boolean isPowered(){
+		int power = this.world.getRedstonePower(poweredPosition(), poweredFacing());
+        return power > 0;
 	}
 
 
@@ -174,7 +191,7 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 		compound.setTag("output", this.output.serializeNBT());
 		compound.setTag("upgrade", this.upgrade.serializeNBT());
 		compound.setInteger("Cooktime", getCooktime());
-		compound.setBoolean("Activation", isActive());
+		compound.setBoolean("Activation", this.activation);
 		compound.setInteger("Facing", getFacing().ordinal());
 		compound.setInteger("RecipeIndex", getRecipeIndex());
 		return compound;
