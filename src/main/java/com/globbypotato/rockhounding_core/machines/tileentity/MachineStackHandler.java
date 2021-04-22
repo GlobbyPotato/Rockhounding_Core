@@ -188,14 +188,27 @@ public class MachineStackHandler extends ItemStackHandler{
 	  * @param slot
 	  */
 	 public void damageUnbreakingSlot(int level, int slot){
-		if(level > 0){
-			if(this.rand.nextInt(level + 1) == 0){
-				damageSlot(slot);
-			}
-		}else{
+		if(this.rand.nextInt(1 + level) == 0){
 			damageSlot(slot);
 		}
 	 }
+
+
+
+	/**
+	 * Repair the stack in the slot
+	 * 
+	 * @param slot
+	 */	
+	 public void repairMendingSlot(int slot) {
+		if(!this.getStackInSlot(slot).isEmpty()){
+			int damage = this.getStackInSlot(slot).getItemDamage();
+			if(damage > 0){
+				this.getStackInSlot(slot).setItemDamage(damage - 1);
+			}
+		}
+	}
+
 
 
 /*

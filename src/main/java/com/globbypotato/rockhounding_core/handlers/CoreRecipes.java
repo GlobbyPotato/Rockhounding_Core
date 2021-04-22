@@ -16,7 +16,6 @@ import rockhounding.api.IReciperBase;
 @Mod.EventBusSubscriber
 public class CoreRecipes {
 
-	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerRecipes(final RegistryEvent.Register<IRecipe> event){
 		//inductor

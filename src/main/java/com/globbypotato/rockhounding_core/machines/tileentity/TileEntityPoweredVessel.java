@@ -88,6 +88,10 @@ public abstract class TileEntityPoweredVessel extends TileEntityPoweredTank impl
 		return 2000;
 	}
 
+	public int gasEnergizer(){
+		return 2000;
+	}
+
 	/**
 	 * Transfer the gas from inner tank to the power bar
 	 */
@@ -107,9 +111,9 @@ public abstract class TileEntityPoweredVessel extends TileEntityPoweredTank impl
 		if(!hasFuelBlend()){
 			if(!turbine.isEmpty() && turbine.isItemEqual(CoreBasics.gas_turbine)){
 				if(this.gasTank.getFluidAmount() >= 10){
-					if(this.getRedstone() <= this.getRedstoneMax() - gasBurntime()){
+					if(this.getRedstone() <= this.getRedstoneMax() - gasEnergizer()){
 						this.input.drainOrCleanFluid(this.gasTank, 10, false);
-						this.redstoneCount += gasBurntime();
+						this.redstoneCount += gasEnergizer();
 						this.markDirtyClient();
 					}
 				}

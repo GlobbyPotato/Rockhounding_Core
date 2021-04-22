@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
@@ -20,6 +21,8 @@ import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class CoreUtils {
+	public static int mendingFactor = 4;
+
 // ITEMS
 	/**
 	 * Checks if the player is holding the mod wrench in main hand
@@ -192,6 +195,20 @@ public class CoreUtils {
 
 
 
+	/**
+	 * 
+	 * Check if the stack in the slot has mending
+	 * 
+	 * @param slot
+	 * @return
+	 */
+	public static boolean hasMending(ItemStack slot){
+		int mendingLevel = getEnchantmentLevel(Enchantments.MENDING, slot);
+        return mendingLevel > 0;
+	}
+
+
+
 // FLUIDS
 	/**
 	 * Gets a fluidstack witgh a registered fluid
@@ -246,6 +263,8 @@ public class CoreUtils {
 			&& (insertingStack.getItem() == Items.BUCKET 
 			|| (insertingStack.getItem() instanceof UniversalBucket && FluidUtil.getFluidContained(insertingStack).containsFluid(null)));
 	}
+
+
 
 // FUELING
 	/**
