@@ -226,11 +226,11 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canSetOrFillFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid) {
-		return insertingFluid != null && (tankFluid == null || canFillFluid(tank, tankFluid, insertingFluid));
+		return insertingFluid != null && ((tankFluid == null && insertingFluid.amount <= tank.getCapacity()) || canFillFluid(tank, tankFluid, insertingFluid));
 	}
 
 	/**
-	 * Check if can add the specific amount to the existing fluid with a specific amount
+	 * Check if can add the specific amount to the existing fluid
 	 * 
 	 * @param tank
 	 * @param tankFluid
@@ -238,7 +238,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canFillFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid){
-		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount <= tank.getCapacity() - insertingFluid.amount;
+		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount + insertingFluid.amount <= tank.getCapacity();
 	}
 
 	/**
@@ -251,11 +251,11 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canSetOrAddFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid, int amount) {
-		return insertingFluid != null && (tankFluid == null || canAddFluid(tank, tankFluid, insertingFluid, amount));
+		return insertingFluid != null && ((tankFluid == null && amount <= tank.getCapacity()) || canAddFluid(tank, tankFluid, insertingFluid, amount));
 	}
 
 	/**
-	 * Check if can add the specific amount to the existing fluid with a specific amount
+	 * Check if can add the specific amount to the existing fluid by custom amount
 	 * 
 	 * @param tank
 	 * @param tankFluid
@@ -264,7 +264,7 @@ public class MachineStackHandler extends ItemStackHandler{
 	 * @return
 	 */
 	public boolean canAddFluid(FluidTank tank, FluidStack tankFluid, FluidStack insertingFluid, int amount){
-		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount <= tank.getCapacity() - amount;
+		return tankFluid != null && tankFluid.isFluidEqual(insertingFluid) && tankFluid.amount + amount <= tank.getCapacity();
 	}
 
 	/**
