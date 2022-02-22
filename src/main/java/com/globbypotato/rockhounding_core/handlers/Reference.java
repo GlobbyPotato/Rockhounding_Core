@@ -8,8 +8,6 @@ import net.minecraft.item.ItemStack;
 public class Reference {
 	// Create Mod Reference 
 	public static final String MODID = "rockhounding_core";
-    public static final String NAME = "Rockhounding Mod: Core";
-    public static final String VERSION = "3.27";
 	public static final String CLIENT_PROXY_CLASS = "com.globbypotato.rockhounding_core.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.globbypotato.rockhounding_core.proxy.CommonProxy";
 
