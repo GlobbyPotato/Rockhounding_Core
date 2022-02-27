@@ -5,8 +5,6 @@ import com.globbypotato.rockhounding_core.utils.CoreBasics;
 import com.globbypotato.rockhounding_core.utils.CoreUtils;
 import com.globbypotato.rockhounding_core.utils.FuelUtils;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
-import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -16,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 
 public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine implements IEnergyHandlingTile {
 
@@ -47,7 +46,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	}
 
 	/**
-	 * @return override if the RF is not required whith blend
+	 * @return override if the RF is not required with blend
 	 */
 	protected boolean isRFGatedByBlend(){
 		return false;
@@ -62,8 +61,16 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	//---------------- INDUCTION ----------------
 	@Override
 	public boolean canInduct() {
-		return hasPermanentInduction() || (!hasPermanentInduction() && (this.input.getSlots() > 0 && fuelID() > -1 && !this.input.getStackInSlot(fuelID()).isEmpty() && this.input.getStackInSlot(fuelID()).isItemEqual(CoreBasics.heat_inductor)));
+		return hasPermanentInduction() || (!hasPermanentInduction() && hasValidInductor());
 	}
+
+	private boolean hasValidInductor() {
+		return this.input.getSlots() > 0 
+			&& fuelID() > -1 
+			&& !this.input.getStackInSlot(fuelID()).isEmpty() 
+			&& this.input.getStackInSlot(fuelID()).isItemEqual(CoreBasics.heat_inductor);
+	}
+
 
 	public boolean hasPermanentInduction() { 
 		return allowPermanentInduction() && isInductionActive(); 
@@ -149,7 +156,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	}
 
 	public boolean isRedstoneFilled() {
-		return canInduct() && hasRF() /*&& isRedstoneRefilled()*/;
+		return canInduct() && hasRF();
 	}
 
 
@@ -160,7 +167,6 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 		super.readFromNBT(compound);
 		this.redstoneCount = compound.getInteger("RedstoneCount");
 		this.permanentInductor = compound.getBoolean("Inductor");
-		this.storage.readFromNBT(compound.getCompoundTag("StorageNBT"));
 	}
 
 	@Override
@@ -169,9 +175,6 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 		compound.setInteger("RedstoneCount", getRedstone());
 		compound.setBoolean("Inductor", isInductionActive());
 
-		NBTTagCompound storageNBT = new NBTTagCompound();
-		this.storage.writeToNBT(storageNBT);
-		compound.setTag("StorageNBT", storageNBT);
 		return compound;
 	}
 
@@ -192,12 +195,6 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	}
 
 
-
-	//---------------- COFH ----------------
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return this.storage.receiveEnergy(maxReceive, simulate);
-	}
 
 	//---------------- FORGE ----------------
 	@Override
@@ -223,6 +220,10 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
     	return 2000;
     }
 
+	public int getRFToFuel() {
+		return getRedstone() * ModConfig.RFToFuelFactor;
+	}
+
 
 
 	//---------------- PROCESS ----------------
@@ -230,7 +231,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 		int energyReceived = 0;
 		if(redstoneIsRefillable()){
 			if(!isFullRedstone()){
-		        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), this.storage.getEnergyStored());
+		        energyReceived = Math.min(this.getRedstoneMax() - this.getRedstone(), this.getRedstone());
 	        	this.redstoneCount += energyReceived;
 	        	this.storage.extractEnergy(energyReceived, false);
 				this.markDirtyClient();
@@ -245,7 +246,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 		int energyReceived = 0;
 		if(isRedstoneFilled() || canRefillOnlyPower() ){
 	        if(!isFullPower()){
-		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), this.storage.getEnergyStored());
+		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), this.getRFToFuel());
 		        this.powerCount += energyReceived;
 	        	this.storage.extractEnergy(energyReceived, false);
 				this.markDirtyClient();
@@ -263,17 +264,6 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 			if(possibleEnergy > 0){
 				checkTile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite()).receiveEnergy(possibleEnergy, false);
 				this.redstoneCount -= possibleEnergy;
-			}
-		}else{
-			if(checkTile instanceof IEnergyReceiver) {
-				IEnergyReceiver te = (IEnergyReceiver) checkTile;
-				if(te.canConnectEnergy(facing)){
-					possibleEnergy = te.receiveEnergy(facing.getOpposite(), getRedstone(), true);
-					if(possibleEnergy > 0){
-						te.receiveEnergy(facing.getOpposite(), possibleEnergy, false);
-						this.redstoneCount -= possibleEnergy;
-					}
-				}
 			}
 		}
 	}

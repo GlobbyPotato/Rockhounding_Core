@@ -10,6 +10,7 @@ public class ModConfig {
 	public static boolean enableRainRefill;
 
 	public static boolean enablePermanentInduction;
+	public static int RFToFuelFactor;
 
 	public static boolean enableFuelBlend;
 	public static int fuelBlendPower;
@@ -20,6 +21,7 @@ public class ModConfig {
 		config.load();
 
 		enablePermanentInduction = config.get(			CATEGORY_INDUCTION, "Permanent Induction Enabler",		true,	"Make the Induction Heating Interface a machine permanent upgrade").getBoolean();
+		RFToFuelFactor = config.get(					CATEGORY_INDUCTION, "RF To Fuel Factor",				1,		"How many fuel ticks 1RF can produce").getInt();
 		enableGatedFuel = config.get(					CATEGORY_INDUCTION, "Gated Fuel Enabler",				false,	"Fuel/blend will be no longer accepted if a permanent induction is activated").getBoolean();
 
 		enableFuelBlend = config.get(					CATEGORY_BLEND, "Fuel Blend Enabler",					false,	"Replaces regular fueling with a customized fuel blend").getBoolean();

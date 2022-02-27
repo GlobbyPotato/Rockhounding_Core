@@ -1,10 +1,8 @@
 package com.globbypotato.rockhounding_core.machines.tileentity;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public interface IEnergyHandlingTile extends IEnergyReceiver, IEnergyStorage{
+public interface IEnergyHandlingTile extends IEnergyStorage{
 
 	abstract int getRedstone();
 	abstract int getRedstoneMax();
@@ -31,21 +29,7 @@ public interface IEnergyHandlingTile extends IEnergyReceiver, IEnergyStorage{
 		return getRedstone() >= getChargeMax();
 	}
 
-	//---------------- COFH ----------------
-	@Override
-	public default int getEnergyStored(EnumFacing from) {
-		return this.getRedstone();
-	}
 
-	@Override
-	public default int getMaxEnergyStored(EnumFacing from) {
-		return this.getRedstoneMax();
-	}
-
-	@Override
-	public default boolean canConnectEnergy(EnumFacing from) {
-		return true;
-	}
 
 	//---------------- FORGE ----------------
 	@Override
