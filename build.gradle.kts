@@ -94,8 +94,6 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei_$versionMC:$versionJEI:api"))
     runtimeOnly("mezz.jei:jei_$versionMC:$versionJEI")
 
-    implementation("cofh:RedstoneFlux:$versionRF:deobf")
-
     compileOnly("CraftTweaker2:CraftTweaker2-API:$versionCT")
     implementation("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-$versionCT")
     compileOnly("CraftTweaker2:ZenScript:$versionCT")
