@@ -181,23 +181,17 @@ public class GuiUtils{
 	 * Draw the fuel status
 	 * 
 	 * @param fuelGated
-	 * @param hasFuelBlend
 	 * @param canInduct
 	 * @param isPermanentInduction
 	 * @return
 	 */
-    public static String[] handleFuelStatus(boolean fuelGated, boolean hasFuelBlend, boolean canInduct, boolean isPermanentInduction) {		
+    public static String[] handleFuelStatus(boolean fuelGated, boolean canInduct, boolean isPermanentInduction) {		
 		String fuelCaption = TextFormatting.GRAY + "Fuel:";
 		String inductionCaption = TextFormatting.GRAY + "Induction:";
 
 		String fuelStatus = TextFormatting.DARK_GRAY + "Status: " + TextFormatting.GOLD + "Free";
 		if(fuelGated){
 			fuelStatus = TextFormatting.DARK_GRAY + "Status: " + TextFormatting.GOLD + "Gated";
-		}
-
-		String fuelType = TextFormatting.DARK_GRAY + "Type: " + TextFormatting.YELLOW + "Common";
-		if(hasFuelBlend){
-			fuelType = TextFormatting.DARK_GRAY + "Type: " + TextFormatting.YELLOW + "Blend";
 		}
 
 		String indString = TextFormatting.DARK_GRAY + "Status: " + TextFormatting.RED + "OFF";
@@ -210,7 +204,7 @@ public class GuiUtils{
 			permaString = TextFormatting.DARK_GRAY + "Type: " + TextFormatting.DARK_RED + "Permanent";
 		}
 
-		return new String[]{fuelCaption, fuelType, fuelStatus, "", inductionCaption, permaString, indString};
+		return new String[]{fuelCaption, fuelStatus, "", inductionCaption, permaString, indString};
 	}
 
     /**

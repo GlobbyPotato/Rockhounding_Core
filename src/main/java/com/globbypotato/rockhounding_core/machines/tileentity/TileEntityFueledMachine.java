@@ -1,8 +1,5 @@
 package com.globbypotato.rockhounding_core.machines.tileentity;
 
-import com.globbypotato.rockhounding_core.handlers.ModConfig;
-import com.globbypotato.rockhounding_core.utils.CoreBasics;
-import com.globbypotato.rockhounding_core.utils.CoreUtils;
 import com.globbypotato.rockhounding_core.utils.FuelUtils;
 
 import net.minecraft.entity.item.EntityItem;
@@ -24,19 +21,19 @@ public abstract class TileEntityFueledMachine extends TileEntityInv  implements 
 	//---------------- FUEL ----------------
 	protected void fuelHandler(ItemStack stack) {
 		if(fuelID() > -1 && !stack.isEmpty()) {
-			if(!hasFuelBlend() && FuelUtils.isItemFuel(stack) ){
+			if(isFuel(stack) ){
 				burnFuel(stack);
-				this.markDirtyClient();
-			}else if(hasFuelBlend() && ItemStack.areItemsEqual(stack, CoreBasics.fuel_blend)){
-				burnBlend(stack);
 				this.markDirtyClient();
 			}
 		}
 	}
 
 	public boolean isGatedPowerSource(ItemStack insertingStack){
-		return (!hasFuelBlend() && FuelUtils.isItemFuel(insertingStack)) 
-			|| (hasFuelBlend() && CoreUtils.hasBlend(insertingStack));
+		return isFuel(insertingStack);
+	}
+
+	public boolean isFuel(ItemStack insertingStack){
+		return FuelUtils.isItemFuel(insertingStack);
 	}
 
 	protected void burnFuel(ItemStack stack) {
@@ -61,28 +58,6 @@ public abstract class TileEntityFueledMachine extends TileEntityInv  implements 
 			}
 			if(stack.getCount() <= 0){
 				this.input.setStackInSlot(fuelID(), ItemStack.EMPTY);
-			}
-		}
-	}
-
-
-
-	//---------------- REDSTONE ----------------
-	public boolean hasFuelBlend() { 
-		return ModConfig.enableFuelBlend; 
-	}
-	public int getBlend(){
-		return ModConfig.fuelBlendPower;
-	}
-
-	protected void burnBlend(ItemStack stack) {
-		if(fuelID() > -1 && !stack.isEmpty()) {
-			if( this.getPower() <= (this.getPowerMax() - getBlend()) ){
-				this.powerCount += getBlend();
-				stack.shrink(1);
-				if(stack.getCount() <= 0){
-					this.input.setStackInSlot(fuelID(), ItemStack.EMPTY);
-				}
 			}
 		}
 	}

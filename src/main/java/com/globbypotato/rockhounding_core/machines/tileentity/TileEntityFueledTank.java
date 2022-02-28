@@ -186,13 +186,11 @@ public abstract class TileEntityFueledTank extends TileEntityFueledMachine imple
 	 * Transfer the lava from inner tank to the power bar
 	 */
 	public void lavaHandler(){
-		if(!hasFuelBlend()){
-			if(this.lavaTank.getFluidAmount() >= Fluid.BUCKET_VOLUME){
-				if(this.getPower() <= this.getPowerMax() - lavaBurntime()){
-					this.input.drainOrCleanFluid(this.lavaTank, Fluid.BUCKET_VOLUME, false);
-					this.powerCount += lavaBurntime();
-					this.markDirtyClient();
-				}
+		if(this.lavaTank.getFluidAmount() >= Fluid.BUCKET_VOLUME){
+			if(this.getPower() <= this.getPowerMax() - lavaBurntime()){
+				this.input.drainOrCleanFluid(this.lavaTank, Fluid.BUCKET_VOLUME, false);
+				this.powerCount += lavaBurntime();
+				this.markDirtyClient();
 			}
 		}
 	}

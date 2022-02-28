@@ -2,7 +2,6 @@ package com.globbypotato.rockhounding_core;
 
 import com.globbypotato.rockhounding_core.handlers.Reference;
 import com.globbypotato.rockhounding_core.handlers.RegistryHandler;
-import com.globbypotato.rockhounding_core.items.FuelBlend;
 import com.globbypotato.rockhounding_core.items.io.UtilIO;
 
 import net.minecraft.item.Item;
@@ -19,7 +18,6 @@ public class CoreItems {
 	// initialize the item
 	public static Item HEAT_INDUCTOR;
 	public static Item GAS_TURBINE;
-	public static Item FUEL_BLEND;
 	public static Item MOD_WRENCH;
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)
@@ -29,7 +27,6 @@ public class CoreItems {
 		public static void initItems(){
 			HEAT_INDUCTOR = new UtilIO("heat_inductor");
 			GAS_TURBINE = new UtilIO("gas_turbine");
-			FUEL_BLEND = new FuelBlend("fuel_blend");
 			MOD_WRENCH = new UtilIO("mod_wrench");
 		}
 
@@ -41,7 +38,6 @@ public class CoreItems {
 			final IForgeRegistry<Item> registry = event.getRegistry();
 			registry.register(HEAT_INDUCTOR);
 			registry.register(GAS_TURBINE);
-			registry.register(FUEL_BLEND);
 			registry.register(MOD_WRENCH);
 		}
 
@@ -54,7 +50,6 @@ public class CoreItems {
 		public static void registerModels(ModelRegistryEvent event){
 			RegistryHandler.registerSingleModel(HEAT_INDUCTOR);
 			RegistryHandler.registerSingleModel(GAS_TURBINE);
-			RegistryHandler.registerSingleModel(FUEL_BLEND);
 			RegistryHandler.registerSingleModel(MOD_WRENCH);
 		}
 

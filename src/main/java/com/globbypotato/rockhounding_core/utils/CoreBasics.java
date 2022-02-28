@@ -11,7 +11,6 @@ public class CoreBasics {
 	// compose the itemstack
 	public static ItemStack heat_inductor = new ItemStack(CoreItems.HEAT_INDUCTOR);
 	public static ItemStack gas_turbine = new ItemStack(CoreItems.GAS_TURBINE);
-	public static ItemStack fuel_blend = new ItemStack(CoreItems.FUEL_BLEND);
 	public static ItemStack mod_wrench = new ItemStack(CoreItems.MOD_WRENCH);
 	public static FluidStack waterStack(int amount) {return new FluidStack(FluidRegistry.WATER, amount);}
 	public static FluidStack lavaStack(int amount) {return new FluidStack(FluidRegistry.LAVA, amount);}

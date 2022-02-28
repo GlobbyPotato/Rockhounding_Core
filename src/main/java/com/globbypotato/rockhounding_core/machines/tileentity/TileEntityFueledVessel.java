@@ -91,13 +91,11 @@ public abstract class TileEntityFueledVessel extends TileEntityFueledTank implem
 	 * Transfer the gas from inner tank to the power bar
 	 */
 	public void gasHandler(){
-		if(!hasFuelBlend()){
-			if(this.gasTank.getFluidAmount() > 0){
-				if(this.getPower() <= this.getPowerMax() - gasBurntime()){
-					this.input.drainOrCleanFluid(this.gasTank, 1, false);
-					this.powerCount += gasBurntime();
-					this.markDirtyClient();
-				}
+		if(this.gasTank.getFluidAmount() > 0){
+			if(this.getPower() <= this.getPowerMax() - gasBurntime()){
+				this.input.drainOrCleanFluid(this.gasTank, 1, false);
+				this.powerCount += gasBurntime();
+				this.markDirtyClient();
 			}
 		}
 	}

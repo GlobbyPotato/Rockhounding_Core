@@ -24,9 +24,5 @@ public class CoreRecipes {
 		}else{
 			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, "heat_inductor"), new ResourceLocation(Reference.MODID, "utils"), CoreBasics.heat_inductor, new Object[] { "III", "OBO", "N N", 'I', "ingotIron", 'B', "blockIron", 'N', "nuggetIron", 'O', "obsidian"});
 		}
-		//fuel blend
-		if(ModConfig.enableFuelBlend){
-			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, "fuel_blend"), new ResourceLocation(Reference.MODID, "utils"), new ItemStack(CoreItems.FUEL_BLEND, 9), new Object[] { "RRR", "CGC", "RRR", 'R', "dustRedstone", 'C', new ItemStack(Items.COAL), 'G', "dustGlowstone"});
-		}
 	}
 }

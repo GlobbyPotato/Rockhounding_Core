@@ -96,26 +96,22 @@ public abstract class TileEntityPoweredVessel extends TileEntityPoweredTank impl
 	 * Transfer the gas from inner tank to the power bar
 	 */
 	public void gasHandler(){
-		if(!hasFuelBlend()){
-			if(this.gasTank.getFluidAmount() >= 10){
-				if(this.getPower() <= this.getPowerMax() - gasBurntime()){
-					this.input.drainOrCleanFluid(this.gasTank, 10, false);
-					this.powerCount += gasBurntime();
-					this.markDirtyClient();
-				}
+		if(this.gasTank.getFluidAmount() >= 10){
+			if(this.getPower() <= this.getPowerMax() - gasBurntime()){
+				this.input.drainOrCleanFluid(this.gasTank, 10, false);
+				this.powerCount += gasBurntime();
+				this.markDirtyClient();
 			}
 		}
 	}
 
 	public void turbineHandler(ItemStack turbine){
-		if(!hasFuelBlend()){
-			if(!turbine.isEmpty() && turbine.isItemEqual(CoreBasics.gas_turbine)){
-				if(this.gasTank.getFluidAmount() >= 10){
-					if(this.getRedstone() <= this.getRedstoneMax() - gasEnergizer()){
-						this.input.drainOrCleanFluid(this.gasTank, 10, false);
-						this.redstoneCount += gasEnergizer();
-						this.markDirtyClient();
-					}
+		if(!turbine.isEmpty() && turbine.isItemEqual(CoreBasics.gas_turbine)){
+			if(this.gasTank.getFluidAmount() >= 10){
+				if(this.getRedstone() <= this.getRedstoneMax() - gasEnergizer()){
+					this.input.drainOrCleanFluid(this.gasTank, 10, false);
+					this.redstoneCount += gasEnergizer();
+					this.markDirtyClient();
 				}
 			}
 		}

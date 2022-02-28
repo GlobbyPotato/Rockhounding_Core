@@ -2,8 +2,6 @@ package com.globbypotato.rockhounding_core.utils;
 
 import java.util.ArrayList;
 
-import com.globbypotato.rockhounding_core.handlers.ModConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -279,25 +277,14 @@ public class CoreUtils {
 	}
 
 	/**
-	 * Checks if the inserting stack is the fuel blend
-	 * 
-	 * @param insertingStack
-	 * @return
-	 */
-	public static boolean hasBlend(ItemStack insertingStack) {
-		return !insertingStack.isEmpty() && (ItemStack.areItemsEqual(insertingStack, CoreBasics.fuel_blend));
-	}
-
-	/**
 	 * Checks if it's possible to insert the given fuel type
 	 * 
 	 * @param insertingStack
 	 * @return
 	 */
 	public static boolean isPowerSource(ItemStack insertingStack){
-		return (!ModConfig.enableFuelBlend && FuelUtils.isItemFuel(insertingStack)) 
-			|| CoreUtils.hasInductor(insertingStack)
-			|| (ModConfig.enableFuelBlend && CoreUtils.hasBlend(insertingStack));
+		return FuelUtils.isItemFuel(insertingStack)
+			|| CoreUtils.hasInductor(insertingStack);
 	}
 
 }
