@@ -20,4 +20,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "rockhounding_core"
+rootProject.name = "Rockhounding_Core"
