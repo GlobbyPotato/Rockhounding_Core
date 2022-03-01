@@ -4,6 +4,7 @@ import java.time.Instant
 plugins {
     idea
     java
+	eclipse
     id("net.minecraftforge.gradle") version "5.1.+"
     id("wtf.gofancy.fancygradle") version "1.1.+"
 }

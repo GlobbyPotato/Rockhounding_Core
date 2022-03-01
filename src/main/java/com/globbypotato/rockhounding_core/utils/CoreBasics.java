@@ -5,9 +5,13 @@ import com.globbypotato.rockhounding_core.CoreItems;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Loader;
 
 public class CoreBasics {
-	public static String r_flux = "redstoneflux";
+	
+	public static String rh_chemistry_id = "rockhounding_chemistry";
+	public static boolean chemistryLoaded(){return Loader.isModLoaded(rh_chemistry_id);}
+
 	// compose the itemstack
 	public static ItemStack heat_inductor = new ItemStack(CoreItems.HEAT_INDUCTOR);
 	public static ItemStack gas_turbine = new ItemStack(CoreItems.GAS_TURBINE);

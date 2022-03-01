@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import com.globbypotato.rockhounding_core.gas.CapabilityGasHandler;
 import com.globbypotato.rockhounding_core.machines.tileentity.IGasHandlingTile;
 import com.globbypotato.rockhounding_core.machines.tileentity.TileEntityInv;
-import com.globbypotato.rockhounding_core.utils.CoreBasics;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -136,7 +134,7 @@ public class PipelineBase extends Block{
 	public boolean isOrientedVessel(IBlockAccess worldIn, BlockPos pos, EnumFacing facing) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile != null){ 
-			if( tile instanceof IGasHandlingTile || (Loader.isModLoaded(CoreBasics.r_flux) && tile instanceof IGasHandlingTile)){
+			if( tile instanceof IGasHandlingTile){
 				TileEntityInv vessel = (TileEntityInv)tile;
 				if (vessel.getFacing() == facing){
 					return true;

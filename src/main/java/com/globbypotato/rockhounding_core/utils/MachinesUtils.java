@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Loader;
 
 public class MachinesUtils {
 
@@ -32,6 +31,7 @@ public class MachinesUtils {
 	    			tile.recipeIndex = recipe;
 				}
 			}
+
 			if(te instanceof TileEntityFueledMachine){
 				TileEntityFueledMachine tile = (TileEntityFueledMachine)te;
 				if(stack.getTagCompound().hasKey("Fuel")){
@@ -39,12 +39,14 @@ public class MachinesUtils {
 	            	tile.powerCount = fuel;
 				}
 			}
+
 			if(te instanceof TileEntityFueledTank){
 				TileEntityFueledTank tile = (TileEntityFueledTank)te;
 	    		if(stack.getTagCompound().hasKey(EnumFluidNbt.LAVA.nameTag())){
 	    			tile.lavaTank.setFluid(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(EnumFluidNbt.LAVA.nameTag())));
 	    		}
 			}
+
 			if(te instanceof TileEntityFueledVessel){
 				TileEntityPoweredVessel tile = (TileEntityPoweredVessel)te;
 	    		if(stack.getTagCompound().hasKey(EnumFluidNbt.COMBUSTIBLE.nameTag())){
@@ -52,25 +54,33 @@ public class MachinesUtils {
 	    		}
 			}
 
-			if(Loader.isModLoaded(CoreBasics.r_flux)){
-				if(te instanceof TileEntityPoweredMachine){
-					TileEntityPoweredMachine tile = (TileEntityPoweredMachine)te;
-					if(stack.getTagCompound().hasKey("Energy")){
-						int energy = stack.getTagCompound().getInteger("Energy");
-		            	tile.redstoneCount = energy;
-					}
-					if(stack.getTagCompound().hasKey("Induction")){
-						boolean induction = stack.getTagCompound().getBoolean("Induction");
-		            	tile.permanentInductor = induction;
-					}
+			if(te instanceof TileEntityPoweredMachine){
+				TileEntityPoweredMachine tile = (TileEntityPoweredMachine)te;
+				if(stack.getTagCompound().hasKey("Energy")){
+					int energy = stack.getTagCompound().getInteger("Energy");
+	            	tile.redstoneCount = energy;
 				}
-				if(te instanceof TileEntityPoweredVessel){
-					TileEntityPoweredVessel tile = (TileEntityPoweredVessel)te;
-		    		if(stack.getTagCompound().hasKey(EnumFluidNbt.COMBUSTIBLE.nameTag())){
-		    			tile.gasTank.setFluid(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(EnumFluidNbt.COMBUSTIBLE.nameTag())));
-		    		}
+				if(stack.getTagCompound().hasKey("Induction")){
+					boolean induction = stack.getTagCompound().getBoolean("Induction");
+	            	tile.permanentInductor = induction;
 				}
 			}
+
+			if(te instanceof TileEntityPoweredVessel){
+				TileEntityPoweredVessel tile = (TileEntityPoweredVessel)te;
+	    		if(stack.getTagCompound().hasKey(EnumFluidNbt.COMBUSTIBLE.nameTag())){
+	    			tile.gasTank.setFluid(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(EnumFluidNbt.COMBUSTIBLE.nameTag())));
+	    		}
+			}
+			
+			if(te instanceof TileEntityPoweredTank){
+				TileEntityPoweredTank tile = (TileEntityPoweredTank)te;
+	    		if(stack.getTagCompound().hasKey(EnumFluidNbt.LAVA.nameTag())){
+	    			tile.lavaTank.setFluid(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(EnumFluidNbt.LAVA.nameTag())));
+	    		}
+			}
+
+
 		}
 	}
 
@@ -83,50 +93,51 @@ public class MachinesUtils {
 					itemstack.getTagCompound().setInteger("Recipe", tile.recipeIndex);
 				}
 			}
+
 			if(tileentity instanceof TileEntityFueledMachine){
 				TileEntityFueledMachine tile = (TileEntityFueledMachine)tileentity;
 				itemstack.getTagCompound().setInteger("Fuel", tile.powerCount);
 			}
-			if(!Loader.isModLoaded(CoreBasics.r_flux)){
-				if (tileentity instanceof TileEntityFueledTank){
-					TileEntityFueledTank tile = ((TileEntityFueledTank)tileentity);
-					NBTTagCompound lava = new NBTTagCompound(); 
-					if(tile.lavaTank.getFluid() != null){
-						tile.lavaTank.getFluid().writeToNBT(lava);
-						itemstack.getTagCompound().setTag(EnumFluidNbt.LAVA.nameTag(), lava);
-					}
-				}
-				if(tileentity instanceof TileEntityFueledVessel){
-					TileEntityFueledVessel tile = ((TileEntityFueledVessel)tileentity);
-					NBTTagCompound lava = new NBTTagCompound(); 
-					if(tile.gasTank.getFluid() != null){
-						tile.gasTank.getFluid().writeToNBT(lava);
-						itemstack.getTagCompound().setTag(EnumFluidNbt.COMBUSTIBLE.nameTag(), lava);
-					}
+
+			if (tileentity instanceof TileEntityFueledTank){
+				TileEntityFueledTank tile = ((TileEntityFueledTank)tileentity);
+				NBTTagCompound lava = new NBTTagCompound(); 
+				if(tile.lavaTank.getFluid() != null){
+					tile.lavaTank.getFluid().writeToNBT(lava);
+					itemstack.getTagCompound().setTag(EnumFluidNbt.LAVA.nameTag(), lava);
 				}
 			}
 
-			if(Loader.isModLoaded(CoreBasics.r_flux)){
-				if(tileentity instanceof TileEntityPoweredMachine){
-					TileEntityPoweredMachine tile = (TileEntityPoweredMachine)tileentity;
-					itemstack.getTagCompound().setInteger("Energy", tile.redstoneCount);
-					itemstack.getTagCompound().setBoolean("Induction", tile.permanentInductor);
+			if(tileentity instanceof TileEntityFueledVessel){
+				TileEntityFueledVessel tile = ((TileEntityFueledVessel)tileentity);
+				NBTTagCompound lava = new NBTTagCompound(); 
+				if(tile.gasTank.getFluid() != null){
+					tile.gasTank.getFluid().writeToNBT(lava);
+					itemstack.getTagCompound().setTag(EnumFluidNbt.COMBUSTIBLE.nameTag(), lava);
 				}
-				if(tileentity instanceof TileEntityPoweredVessel){
-					TileEntityPoweredVessel tile = ((TileEntityPoweredVessel)tileentity);
-					NBTTagCompound lava = new NBTTagCompound(); 
-					if(tile.gasTank.getFluid() != null){
-						tile.gasTank.getFluid().writeToNBT(lava);
-						itemstack.getTagCompound().setTag(EnumFluidNbt.COMBUSTIBLE.nameTag(), lava);
-					}
+			}
+
+			if(tileentity instanceof TileEntityPoweredMachine){
+				TileEntityPoweredMachine tile = (TileEntityPoweredMachine)tileentity;
+				itemstack.getTagCompound().setInteger("Energy", tile.redstoneCount);
+				itemstack.getTagCompound().setBoolean("Induction", tile.permanentInductor);
+			}
+
+			if(tileentity instanceof TileEntityPoweredVessel){
+				TileEntityPoweredVessel tile = ((TileEntityPoweredVessel)tileentity);
+				NBTTagCompound lava = new NBTTagCompound(); 
+				if(tile.gasTank.getFluid() != null){
+					tile.gasTank.getFluid().writeToNBT(lava);
+					itemstack.getTagCompound().setTag(EnumFluidNbt.COMBUSTIBLE.nameTag(), lava);
 				}
-				if (tileentity instanceof TileEntityPoweredTank){
-					TileEntityPoweredTank tile = ((TileEntityPoweredTank)tileentity);
-					NBTTagCompound lava = new NBTTagCompound(); 
-					if(tile.lavaTank.getFluid() != null){
-						tile.lavaTank.getFluid().writeToNBT(lava);
-						itemstack.getTagCompound().setTag(EnumFluidNbt.LAVA.nameTag(), lava);
-					}
+			}
+
+			if (tileentity instanceof TileEntityPoweredTank){
+				TileEntityPoweredTank tile = ((TileEntityPoweredTank)tileentity);
+				NBTTagCompound lava = new NBTTagCompound(); 
+				if(tile.lavaTank.getFluid() != null){
+					tile.lavaTank.getFluid().writeToNBT(lava);
+					itemstack.getTagCompound().setTag(EnumFluidNbt.LAVA.nameTag(), lava);
 				}
 			}
 		}
