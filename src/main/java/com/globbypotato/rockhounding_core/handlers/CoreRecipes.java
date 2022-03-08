@@ -1,24 +1,15 @@
 package com.globbypotato.rockhounding_core.handlers;
 
-import com.globbypotato.rockhounding_core.utils.CoreBasics;
-
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
 public class CoreRecipes {
 
 	@SubscribeEvent
 	public static void registerRecipes(final RegistryEvent.Register<IRecipe> event){
-		//inductor
-		if(CoreBasics.chemistryLoaded()){
-			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, "heat_inductor"), new ResourceLocation(Reference.MODID, "utils"), CoreBasics.heat_inductor, new Object[] { "III", "HHH", "N N", 'I', "ingotIron", 'H', "itemNichromeHeater", 'N', "nuggetIron"});
-		}else{
-			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, "heat_inductor"), new ResourceLocation(Reference.MODID, "utils"), CoreBasics.heat_inductor, new Object[] { "III", "OBO", "N N", 'I', "ingotIron", 'B', "blockIron", 'N', "nuggetIron", 'O', "obsidian"});
-		}
+
 	}
 }

@@ -6,10 +6,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.energy.EnergyStorage;
 
 public abstract class TileEntityFueledMachine extends TileEntityInv  implements IFuelHandlingTile {
 
-	public int powerCount = 0;
+    public final EnergyStorage storage = new EnergyStorage(rfTransfer());
+
+    public int powerCount = 0;
 	public int powerMax = 64000;
 
 	public TileEntityFueledMachine(int inputSlots, int outputSlots, int templateSlots, int upgradeSlots) {
@@ -26,10 +29,6 @@ public abstract class TileEntityFueledMachine extends TileEntityInv  implements 
 				this.markDirtyClient();
 			}
 		}
-	}
-
-	public boolean isGatedPowerSource(ItemStack insertingStack){
-		return isFuel(insertingStack);
 	}
 
 	public boolean isFuel(ItemStack insertingStack){

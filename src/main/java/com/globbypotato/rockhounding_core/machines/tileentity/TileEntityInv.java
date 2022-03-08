@@ -151,6 +151,13 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 
 
 
+	//---------------- REDSTONE ----------------
+	public int rfTransfer(){
+    	return 2000;
+    }
+
+
+
 	//---------- REDSTONE SIGNAL ----------
 	public boolean isComparatorSensible(){
 		return true;

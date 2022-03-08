@@ -60,10 +60,6 @@ public class MachinesUtils {
 					int energy = stack.getTagCompound().getInteger("Energy");
 	            	tile.redstoneCount = energy;
 				}
-				if(stack.getTagCompound().hasKey("Induction")){
-					boolean induction = stack.getTagCompound().getBoolean("Induction");
-	            	tile.permanentInductor = induction;
-				}
 			}
 
 			if(te instanceof TileEntityPoweredVessel){
@@ -120,7 +116,6 @@ public class MachinesUtils {
 			if(tileentity instanceof TileEntityPoweredMachine){
 				TileEntityPoweredMachine tile = (TileEntityPoweredMachine)tileentity;
 				itemstack.getTagCompound().setInteger("Energy", tile.redstoneCount);
-				itemstack.getTagCompound().setBoolean("Induction", tile.permanentInductor);
 			}
 
 			if(tileentity instanceof TileEntityPoweredVessel){

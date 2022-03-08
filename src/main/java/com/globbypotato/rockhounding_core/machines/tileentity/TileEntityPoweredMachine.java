@@ -1,9 +1,5 @@
 package com.globbypotato.rockhounding_core.machines.tileentity;
 
-import com.globbypotato.rockhounding_core.handlers.ModConfig;
-import com.globbypotato.rockhounding_core.utils.CoreBasics;
-import com.globbypotato.rockhounding_core.utils.CoreUtils;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -13,10 +9,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 
 public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine implements IEnergyHandlingTile {
-
+//extend redstone to oredictable
 	public int redstoneCount = 0;
 	public int redstoneMax = 64000;
 	public int yeldCount = 0;
@@ -24,10 +19,6 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	public int chargeCount = 0;
 	public int chargeMax = 1000000;
 	public int redstoneFactor = 300;
-
-    public final EnergyStorage storage = new EnergyStorage(rfTransfer());
-
-	public boolean permanentInductor;
 
 	public TileEntityPoweredMachine(int inputSlots, int outputSlots, int templateSlots, int upgradeSlots) {
 		super(inputSlots, outputSlots, templateSlots, upgradeSlots);
@@ -53,49 +44,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	//---------------- INDUCTION ----------------
 	@Override
 	public boolean canInduct() {
-		return hasPermanentInduction() || (!hasPermanentInduction() && hasValidInductor());
-	}
-
-	private boolean hasValidInductor() {
-		return this.input.getSlots() > 0 
-			&& fuelID() > -1 
-			&& !this.input.getStackInSlot(fuelID()).isEmpty() 
-			&& this.input.getStackInSlot(fuelID()).isItemEqual(CoreBasics.heat_inductor);
-	}
-
-
-	public boolean hasPermanentInduction() { 
-		return allowPermanentInduction() && isInductionActive(); 
-	}
-
-	public boolean isInductionActive(){
-		return this.permanentInductor;
-	}
-
-	public boolean allowPermanentInduction(){
-		return ModConfig.enablePermanentInduction;
-	}
-
-
-
-	//---------------- FUEL ----------------
-	public void powerHandler(ItemStack stack) {
-		if(fuelID() > -1 && !stack.isEmpty()) {
-			if(allowPermanentInduction() && !isInductionActive() && ItemStack.areItemsEqual(stack, CoreBasics.heat_inductor)){
-				this.permanentInductor = true;
-				this.input.setStackInSlot(fuelID(), ItemStack.EMPTY);
-			}
-		}
-	}
-
-	@Override
-	public boolean isGatedPowerSource(ItemStack insertingStack){
-		return isFuel(insertingStack)
-			|| CoreUtils.hasInductor(insertingStack);
-	}
-
-	public boolean isFuelGated() {
-		return allowPermanentInduction() && isInductionActive();
+		return false;
 	}
 
 
@@ -103,7 +52,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	//---------------- REDSTONE ----------------
 	public boolean hasRedstone(ItemStack insertingStack) {
 		return !insertingStack.isEmpty() 
-			&& (insertingStack.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK) || insertingStack.getItem() == Items.REDSTONE || insertingStack.isItemEqual(CoreBasics.gas_turbine));
+			&& (insertingStack.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK) || insertingStack.getItem() == Items.REDSTONE);
 	}
 
 	protected void redstoneHandler(int slot, int cooktime) {
@@ -125,6 +74,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 		}
 	}
 
+	/*
 	public boolean isRedstoneRequired(int amount){
 		return this.getRedstone() >= amount;
 	}
@@ -140,7 +90,7 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	public boolean isRedstoneFilled() {
 		return canInduct() && hasRF();
 	}
-
+*/
 
 
 	//---------------- I/O ----------------
@@ -148,15 +98,12 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	public void readFromNBT(NBTTagCompound compound){
 		super.readFromNBT(compound);
 		this.redstoneCount = compound.getInteger("RedstoneCount");
-		this.permanentInductor = compound.getBoolean("Inductor");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		super.writeToNBT(compound);
 		compound.setInteger("RedstoneCount", getRedstone());
-		compound.setBoolean("Inductor", isInductionActive());
-
 		return compound;
 	}
 
@@ -198,12 +145,8 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 	@Override
 	public int getYeldMax() {     return this.yeldMax; }
 
-	public int rfTransfer(){
-    	return 2000;
-    }
-
 	public int getRFToFuel() {
-		return this.storage.getEnergyStored() * ModConfig.RFToFuelFactor;
+		return this.storage.getEnergyStored();
 	}
 
 
@@ -226,16 +169,14 @@ public abstract class TileEntityPoweredMachine extends TileEntityFueledMachine i
 
 	public void injectFuel(){
 		int energyReceived = 0;
-		if(isRedstoneFilled() || canRefillOnlyPower() ){
-	        if(!isFullPower()){
-		        energyReceived = Math.min(this.getPowerMax() - this.getPower(), this.getRFToFuel());
-		        this.powerCount += energyReceived;
-	        	this.storage.extractEnergy(energyReceived, false);
-				this.markDirtyClient();
-	        }else{
-				this.powerCount = this.getPowerMax();
-				this.markDirtyClient();
-			}
+        if(!isFullPower()){
+	        energyReceived = Math.min(this.getPowerMax() - this.getPower(), this.getRFToFuel());
+	        this.powerCount += energyReceived;
+        	this.storage.extractEnergy(energyReceived, false);
+			this.markDirtyClient();
+        }else{
+			this.powerCount = this.getPowerMax();
+			this.markDirtyClient();
 		}
 	}
 

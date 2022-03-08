@@ -15,7 +15,7 @@ public class Reference {
 	public static CreativeTabs RockhoundingCore = new CreativeTabs("rockhoundingCore") {
 		@Override
 		public ItemStack getTabIconItem() { 
-			return new ItemStack(CoreItems.HEAT_INDUCTOR); 
+			return new ItemStack(CoreItems.MOD_WRENCH); 
 		}
 	};
 

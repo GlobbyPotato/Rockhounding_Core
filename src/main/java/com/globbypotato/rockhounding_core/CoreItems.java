@@ -16,8 +16,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class CoreItems {
 
 	// initialize the item
-	public static Item HEAT_INDUCTOR;
-	public static Item GAS_TURBINE;
 	public static Item MOD_WRENCH;
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)
@@ -25,8 +23,6 @@ public class CoreItems {
 
 		// initialize the item
 		public static void initItems(){
-			HEAT_INDUCTOR = new UtilIO("heat_inductor");
-			GAS_TURBINE = new UtilIO("gas_turbine");
 			MOD_WRENCH = new UtilIO("mod_wrench");
 		}
 
@@ -36,8 +32,6 @@ public class CoreItems {
 			initItems();
 
 			final IForgeRegistry<Item> registry = event.getRegistry();
-			registry.register(HEAT_INDUCTOR);
-			registry.register(GAS_TURBINE);
 			registry.register(MOD_WRENCH);
 		}
 
@@ -48,8 +42,6 @@ public class CoreItems {
 		 */
 		@SubscribeEvent
 		public static void registerModels(ModelRegistryEvent event){
-			RegistryHandler.registerSingleModel(HEAT_INDUCTOR);
-			RegistryHandler.registerSingleModel(GAS_TURBINE);
 			RegistryHandler.registerSingleModel(MOD_WRENCH);
 		}
 

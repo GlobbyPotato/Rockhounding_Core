@@ -34,7 +34,7 @@ public class CoreUtils {
 	}
 
 	/**
-	 * Checks if the player is holding a stack in main hand
+	 * Checks if the player is holding a certain item in main hand
 	 * 
 	 * @param player
 	 * @return
@@ -260,31 +260,6 @@ public class CoreUtils {
 		return !insertingStack.isEmpty()
 			&& (insertingStack.getItem() == Items.BUCKET 
 			|| (insertingStack.getItem() instanceof UniversalBucket && FluidUtil.getFluidContained(insertingStack).containsFluid(null)));
-	}
-
-
-
-// FUELING
-	/**
-	 * Checks if the inserting stack is an inductor
-	 * 
-	 * @param insertingStack
-	 * @return
-	 */
-	public static boolean hasInductor(ItemStack insertingStack) {
-		return !insertingStack.isEmpty() 
-			&& (ItemStack.areItemsEqual(insertingStack, CoreBasics.heat_inductor));
-	}
-
-	/**
-	 * Checks if it's possible to insert the given fuel type
-	 * 
-	 * @param insertingStack
-	 * @return
-	 */
-	public static boolean isPowerSource(ItemStack insertingStack){
-		return FuelUtils.isItemFuel(insertingStack)
-			|| CoreUtils.hasInductor(insertingStack);
 	}
 
 }

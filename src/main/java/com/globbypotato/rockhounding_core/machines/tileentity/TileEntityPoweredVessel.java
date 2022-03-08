@@ -105,14 +105,12 @@ public abstract class TileEntityPoweredVessel extends TileEntityPoweredTank impl
 		}
 	}
 
-	public void turbineHandler(ItemStack turbine){
-		if(!turbine.isEmpty() && turbine.isItemEqual(CoreBasics.gas_turbine)){
-			if(this.gasTank.getFluidAmount() >= 10){
-				if(this.getRedstone() <= this.getRedstoneMax() - gasEnergizer()){
-					this.input.drainOrCleanFluid(this.gasTank, 10, false);
-					this.redstoneCount += gasEnergizer();
-					this.markDirtyClient();
-				}
+	public void turbineHandler(){
+		if(this.gasTank.getFluidAmount() >= 10){
+			if(this.getRedstone() <= this.getRedstoneMax() - gasEnergizer()){
+				this.input.drainOrCleanFluid(this.gasTank, 10, false);
+				this.redstoneCount += gasEnergizer();
+				this.markDirtyClient();
 			}
 		}
 	}
