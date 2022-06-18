@@ -37,7 +37,9 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 	public int cooktime = 0;
 	public boolean activation = false;
 	public int facing = 0;
-	public int recipeIndex = -1;
+	public float recipeMax;
+	public float recipeIndex = -1;
+	public float recipeStep = 1F;
 
 	public TileEntityInv(int inputSlots, int outputSlots, int templateSlots, int upgradeslots){
 		this.INVENTORYSIZE = inputSlots + outputSlots + templateSlots + upgradeslots;
@@ -145,8 +147,20 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 		return false;
 	}
 
-	public int getRecipeIndex(){
+	public float getRecipeIndex(){
 		return this.recipeIndex;
+	}
+
+	public int getSelectedRecipe() {
+		return (int)getRecipeIndex();
+	}
+
+	public float getRecipeMax(){
+		return this.recipeMax;
+	}
+
+	public float getRecipeStep() {
+		return this.recipeStep;
 	}
 
 
@@ -188,7 +202,9 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 		this.cooktime = compound.getInteger("Cooktime");
 		this.activation = compound.getBoolean("Activation");
 		this.facing = compound.getInteger("Facing");
-		this.recipeIndex = compound.getInteger("RecipeIndex");
+		this.recipeIndex = compound.getFloat("RecipeIndex");
+		this.recipeMax = compound.getFloat("RecipeMax");
+		this.recipeStep = compound.getFloat("RecipeStep");
 	}
 
 	@Override
@@ -200,7 +216,9 @@ public abstract class TileEntityInv extends TileEntityBase implements ITickable{
 		compound.setInteger("Cooktime", getCooktime());
 		compound.setBoolean("Activation", this.activation);
 		compound.setInteger("Facing", getFacing().ordinal());
-		compound.setInteger("RecipeIndex", getRecipeIndex());
+		compound.setFloat("RecipeIndex", getRecipeIndex());
+		compound.setFloat("RecipeMax", getRecipeMax());
+		compound.setFloat("RecipeStep", getRecipeStep());
 		return compound;
 	}
 

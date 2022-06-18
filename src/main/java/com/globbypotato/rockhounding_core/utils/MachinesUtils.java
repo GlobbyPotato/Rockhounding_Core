@@ -27,16 +27,14 @@ public class MachinesUtils {
 			if(te instanceof TileEntityInv){
 				TileEntityInv tile = (TileEntityInv)te;
 				if(stack.getTagCompound().hasKey("Recipe")){
-					int recipe = stack.getTagCompound().getInteger("Recipe");
-	    			tile.recipeIndex = recipe;
+					tile.recipeIndex = stack.getTagCompound().getFloat("Recipe");
 				}
 			}
 
 			if(te instanceof TileEntityFueledMachine){
 				TileEntityFueledMachine tile = (TileEntityFueledMachine)te;
 				if(stack.getTagCompound().hasKey("Fuel")){
-		        	int fuel = stack.getTagCompound().getInteger("Fuel");
-	            	tile.powerCount = fuel;
+					tile.powerCount = stack.getTagCompound().getInteger("Fuel");
 				}
 			}
 
@@ -86,7 +84,7 @@ public class MachinesUtils {
 				itemstack.setTagCompound(new NBTTagCompound());
 				TileEntityInv tile = (TileEntityInv)tileentity;
 				if(tile.recipeIndex >= 0){
-					itemstack.getTagCompound().setInteger("Recipe", tile.recipeIndex);
+					itemstack.getTagCompound().setFloat("Recipe", tile.recipeIndex);
 				}
 			}
 
