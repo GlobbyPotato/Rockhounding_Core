@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PipelineBase extends Block{
+    public static final PropertyBool ISREDSTONEPOWERED = PropertyBool.create("powered");
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool EAST = PropertyBool.create("east");
     public static final PropertyBool SOUTH = PropertyBool.create("south");
@@ -43,7 +44,7 @@ public class PipelineBase extends Block{
 		setHardness(1.0F);
 		setResistance(1.0F);	
 		setHarvestLevel("pickaxe", 0);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(DOWN, Boolean.valueOf(false)).withProperty(UP, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(DOWN, Boolean.valueOf(false)).withProperty(UP, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(ISREDSTONEPOWERED, Boolean.FALSE));
     }
 
     @Override
@@ -131,6 +132,16 @@ public class PipelineBase extends Block{
 		return worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos).hasCapability(CapabilityGasHandler.GAS_HANDLER_CAPABILITY, null);
 	}
 
+	public boolean isVessel(IBlockAccess worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if(tile != null){
+			if( tile instanceof IGasHandlingTile){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean isOrientedVessel(IBlockAccess worldIn, BlockPos pos, EnumFacing facing) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile != null){ 
@@ -146,7 +157,7 @@ public class PipelineBase extends Block{
 
     @Override
     public BlockStateContainer createBlockState(){
-        return new BlockStateContainer(this, new IProperty[] {DOWN, UP, NORTH, EAST, WEST, SOUTH});
+        return new BlockStateContainer(this, new IProperty[] {DOWN, UP, NORTH, EAST, WEST, SOUTH, ISREDSTONEPOWERED});
     }
 
 }
